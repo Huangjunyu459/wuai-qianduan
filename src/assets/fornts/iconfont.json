@@ -6,11 +6,81 @@
   "description": "",
   "glyphs": [
     {
-      "icon_id": "5441008",
+      "icon_id": "554097",
+      "name": "图片",
+      "font_class": "iconset0148",
+      "unicode": "e62f",
+      "unicode_decimal": 58927
+    },
+    {
+      "icon_id": "1241243",
+      "name": "下载",
+      "font_class": "download",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    },
+    {
+      "icon_id": "1278125",
+      "name": "上传",
+      "font_class": "shangchuan",
+      "unicode": "e666",
+      "unicode_decimal": 58982
+    },
+    {
+      "icon_id": "1287715",
       "name": "用户",
       "font_class": "yonghu",
+      "unicode": "e60a",
+      "unicode_decimal": 58890
+    },
+    {
+      "icon_id": "2471403",
+      "name": "音频",
+      "font_class": "yinpin",
+      "unicode": "e67f",
+      "unicode_decimal": 59007
+    },
+    {
+      "icon_id": "5055858",
+      "name": "角色管理",
+      "font_class": "jiaoseguanli",
+      "unicode": "e62e",
+      "unicode_decimal": 58926
+    },
+    {
+      "icon_id": "5441008",
+      "name": "用户",
+      "font_class": "yonghu1",
       "unicode": "e6f1",
       "unicode_decimal": 59121
+    },
+    {
+      "icon_id": "6879353",
+      "name": "视频",
+      "font_class": "shipin",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "8575314",
+      "name": "分类",
+      "font_class": "fenlei",
+      "unicode": "e628",
+      "unicode_decimal": 58920
+    },
+    {
+      "icon_id": "10022054",
+      "name": "新增",
+      "font_class": "new01",
+      "unicode": "e727",
+      "unicode_decimal": 59175
+    },
+    {
+      "icon_id": "11124968",
+      "name": "文章",
+      "font_class": "16",
+      "unicode": "e615",
+      "unicode_decimal": 58901
     },
     {
       "icon_id": "14433066",
@@ -25,6 +95,13 @@
       "font_class": "mima1",
       "unicode": "e609",
       "unicode_decimal": 58889
+    },
+    {
+      "icon_id": "18656539",
+      "name": "游戏",
+      "font_class": "hanhan-01-01",
+      "unicode": "e67b",
+      "unicode_decimal": 59003
     }
   ]
 }
