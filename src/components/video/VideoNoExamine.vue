@@ -116,10 +116,7 @@
         :model="editForm"
         label-width="100px"
       >
-        <el-form-item label="阿里云地址">
-          <video :src="editForm.ossSrc" controls="controls" />
-          <!-- <el-input v-model="editForm.ossSrc" /> -->
-        </el-form-item>
+        <video class="videoPreview" :src="editForm.ossSrc" controls="controls" />
       </el-form>
     </el-dialog>
   </div>
@@ -266,4 +263,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.videoPreview{
+  width: 100%;
+  height: 100%;
+}
 </style>

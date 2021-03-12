@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+
+// 后台管理路由
 import Login from '../components/Login.vue'
 import Home from '../components/Home.vue'
 import Welcome from '../components/Welcome.vue'
@@ -28,11 +30,36 @@ import Comment from '../components/comment/Comment.vue'
 import CommentNoExamine from '../components/comment/CommentNoExamine.vue'
 import DelComment from '../components/comment/DelComment.vue'
 
+// 前端首页路由
+import Index from '../components/qiandaun/Index.vue'
+import Main from '../components/qiandaun/Main.vue'
+import ShowWallpaper from '../components/qiandaun/show/Wallpaper.vue'
+import ShowArticle from '../components/qiandaun/show/Article.vue'
+import ShowGame from '../components/qiandaun/show/Game.vue'
+import ShowMusic from '../components/qiandaun/show/Music.vue'
+import ShowVideo from '../components/qiandaun/show/Video.vue'
+
+import MoreWallpaper from '../components/qiandaun/more/MoreWallpaper.vue'
+import MoreArticle from '../components/qiandaun/more/MoreArticle.vue'
+import MoreGame from '../components/qiandaun/more/MoreGame.vue'
+import MoreMusic from '../components/qiandaun/more/MoreMusic.vue'
+import MoreVideo from '../components/qiandaun/more/MoreVideo.vue'
+
+import DetailWallpaer from '../components/qiandaun/deltail/WallpaperDetail.vue'
+import DetaiArticle from '../components/qiandaun/deltail/ArticleDetail.vue'
+import DetailGame from '../components/qiandaun/deltail/GameDetail.vue'
+import DetailMusic from '../components/qiandaun/deltail/MusicDetail.vue'
+import DetailVideo from '../components/qiandaun/deltail/VideoDetail.vue'
+
+import GameDownload from '../components/qiandaun/show/GameDownload.vue'
+import PersonInfo from '../components/qiandaun/show/PersonInfo.vue'
+import PersonSetting from '../components/qiandaun/show/PersionSetting.vue'
+
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/login',
+    path: '/admin/login',
     component: Login
   },
   {
@@ -142,6 +169,91 @@ const routes = [
         component: DelComment
       }
     ]
+  },
+  {
+    path: '/index',
+    component: Index,
+    //  重定向到主页面
+    redirect: '/main',
+    children: [
+      {
+        path: '/main',
+        component: Main
+      },
+      {
+        path: '/wallpaper',
+        component: ShowWallpaper
+      },
+      {
+        path: '/article',
+        component: ShowArticle
+      },
+      {
+        path: '/game',
+        component: ShowGame
+      },
+      {
+        path: '/music',
+        component: ShowMusic
+      },
+      {
+        path: '/video',
+        component: ShowVideo
+      },
+      {
+        path: '/showMoreWallpaper',
+        component: MoreWallpaper
+      },
+      {
+        path: '/showMoreArticle',
+        component: MoreArticle
+      },
+      {
+        path: '/showMoreGame',
+        component: MoreGame
+      },
+      {
+        path: '/showMoreMusic',
+        component: MoreMusic
+      },
+      {
+        path: '/showMoreVideo',
+        component: MoreVideo
+      },
+      {
+        path: '/showDetailWallpaper',
+        component: DetailWallpaer
+      },
+      {
+        path: '/showDetailArticle',
+        component: DetaiArticle
+      },
+      {
+        path: '/showDetailGame',
+        component: DetailGame
+      },
+      {
+        path: '/showDetailMusic',
+        component: DetailMusic
+      },
+      {
+        path: '/showDetailVideo',
+        component: DetailVideo
+      },
+      {
+        path: '/gameDownload',
+        component: GameDownload
+      },
+      {
+        path: '/personInfo',
+        component: PersonInfo
+      },
+      {
+        path: '/personSetting',
+        component: PersonSetting
+      }
+    ]
+
   }
 
 ]
@@ -152,17 +264,17 @@ const router = new VueRouter({
   routes
 })
 
-//  挂在路由导航守卫
-router.beforeEach((to, from, next) => {
-  //  to 将要访问的路径
-  //  from 代表从哪个路径跳转过来
-  //  next 是一个函数，表示放行
-  //   next()  放行        next('/login') 强制跳转
-  if (to.path === '/login') return next()
-  //  获取 token
-  const tokenStr = window.sessionStorage.getItem('token')
-  if (!tokenStr) return next('/login')
-  next()
-})
+// //  挂在路由导航守卫（先注释）
+// router.beforeEach((to, from, next) => {
+//   //  to 将要访问的路径
+//   //  from 代表从哪个路径跳转过来
+//   //  next 是一个函数，表示放行
+//   //   next()  放行        next('/login') 强制跳转
+//   if (to.path === '/login') return next()
+//   //  获取 token
+//   const tokenStr = window.sessionStorage.getItem('token')
+//   if (!tokenStr) return next('/login')
+//   next()
+// })
 
 export default router
