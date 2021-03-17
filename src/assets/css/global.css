@@ -18,6 +18,9 @@ html,body,#app{
 .el-pagination{
     margin-top: 15px;
 }
+a{
+    cursor:pointer;
+}
 
 /* 自己定义的 video 和 audio 样式 */
 /* .myVideo{

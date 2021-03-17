@@ -123,6 +123,9 @@
         <el-form-item label="提取码" prop="bdCode">
           <el-input v-model="addForm.bdCode" />
         </el-form-item>
+        <el-form-item label="解压码">
+          <el-input v-model="addForm.dCode" />
+        </el-form-item>
         <el-form-item label="作者id" prop="authorId">
           <el-input v-model="addForm.authorId" />
         </el-form-item>
@@ -161,6 +164,9 @@
         </el-form-item>
         <el-form-item label="提取码" prop="bdCode">
           <el-input v-model="editForm.bdCode" />
+        </el-form-item>
+        <el-form-item label="解压码">
+          <el-input v-model="editForm.dCode" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -219,6 +225,7 @@ export default {
         description: '',
         bdSrc: '',
         bdCode: '',
+        dCode: '',
         authorId: '',
         categoryId: '',
         love: 0
@@ -239,8 +246,8 @@ export default {
           { required: true, message: '请输入游戏名称', trigger: 'blur' },
           {
             min: 1,
-            max: 16,
-            message: '长度在 1 到 16 个字符',
+            max: 50,
+            message: '长度在 1 到 50 个字符',
             trigger: 'blur'
           }
         ],
@@ -313,6 +320,7 @@ export default {
         description: '',
         bdSrc: '',
         bdCode: '',
+        dCode: '',
         authorId: '',
         categoryId: '',
         love: 0

@@ -20,8 +20,14 @@
     <!-- 轮播图区域 -->
     <div class="carousel">
       <el-carousel height="400px" indicator-position="outside">
-        <el-carousel-item v-for="item in 5" :key="item">
-          <h3>{{ item }}</h3>
+        <el-carousel-item v-for="item in hotWallpaperList" :key="item">
+          <a @click="detailWallpaper(item.id)">
+            <div class="cimg">
+              <img
+                :src="item.ossSrc"
+                alt="加载失败"
+              >
+            </div></a>
         </el-carousel-item>
       </el-carousel>
     </div>
@@ -35,22 +41,24 @@
         type="info"
       >最新壁纸</el-link>
       <el-row :gutter="20">
-        <el-col v-for="o in 8" :key="o" :span="6">
+        <el-col v-for="o in wallpaperList" :key="o" :span="6">
           <el-card class="showbox box-card">
-            <div class="titlePic" style="height: 100px">
-              <img
-                style="height: 100%"
-                src="https://2021article.oss-cn-hangzhou.aliyuncs.com/pic/ae2483538378479f84c66a6a89384e5c_%E9%BB%98%E8%AE%A4%E5%A4%B4%E5%83%8F.jpg"
-                alt=""
-              >
-            </div>
+            <a @click="detailWallpaper(o.id)">
+              <div class="titlePic" style="height: 100px">
+                <img
+                  style="height: 100%"
+                  :src="o.ossSrc"
+                  alt=""
+                >
+              </div>
+            </a>
             <div class="title" style="height: 50px">
               <el-link
                 style="color: black"
                 :underline="false"
                 type="info"
-                href="/showDetailWallpaper"
-              >文章标题文章标题文章标题文章标题文章标题文章标题文章标题文章标题文章标题文章标题</el-link>
+                @click="detailWallpaper(o.id)"
+              >{{ o.title }}</el-link>
             </div>
           </el-card>
         </el-col>
@@ -60,7 +68,7 @@
           style="color: black"
           :underline="false"
           type="info"
-          href="/showMoreWallpaper"
+          href="showMoreWallpaper"
         >更多壁纸资讯</el-link>
       </div>
     </div>
@@ -68,7 +76,38 @@
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      wallpaperList: [],
+      hotWallpaperList: []
+    }
+  },
+  created() {
+    this.getWallpaperList()
+    this.getHotWallpaperList()
+  },
+  methods: {
+    async getWallpaperList() {
+      const { data: res } = await this.$http.get('/wallpaper/findEightWallpaper')
+      if (res.statue !== 200) {
+        return this.$message.error('获取壁纸列表失败')
+      }
+      this.wallpaperList = res.data.wallpaperList
+    },
+    async getHotWallpaperList() {
+      const { data: res } = await this.$http.get('/wallpaper/findFiveHotWallpaper')
+      console.log(res)
+      if (res.statue !== 200) {
+        return this.$message.error('获取壁纸列表失败')
+      }
+      this.hotWallpaperList = res.data.wallpaperList
+    },
+    detailWallpaper(id) {
+      this.$router.push(`/showDetailWallpaper?id=${id}`)
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>
@@ -90,6 +129,13 @@ export default {}
   width: 100%;
   margin-top: 20px;
   margin-bottom: 30px;
+}
+.cimg {
+  height: 400px;
+}
+img {
+  width: 100%;
+  height: 100%;
 }
 .showbox {
   height: 150px;

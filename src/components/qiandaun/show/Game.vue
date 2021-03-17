@@ -27,24 +27,21 @@
         type="info"
       >最新游戏</el-link>
       <el-row :gutter="20">
-        <el-col v-for="o in 16" :key="o" :span="6">
-          <el-card class="showbox box-card">
-            <div class="titlePic" style="height: 100px">
-              <img
-                style="height: 100%"
-                src="https://2021article.oss-cn-hangzhou.aliyuncs.com/pic/ae2483538378479f84c66a6a89384e5c_%E9%BB%98%E8%AE%A4%E5%A4%B4%E5%83%8F.jpg"
-                alt=""
-              >
-            </div>
-            <div class="gameName" style="height: 50px">
-              <el-link
-                style="color: black"
-                :underline="false"
-                type="info"
-                href="/showDetailGame"
-              >文章标题文章标题文章标题文章标题文章标题文章标题文章标题文章标题文章标题文章标题</el-link>
-            </div>
-          </el-card>
+        <el-col v-for="o in gameList" :key="o" :span="6">
+          <a @click="detailGame(o.id)">
+            <el-card class="showbox box-card">
+              <div class="titlePic" style="height: 100px">
+                <img
+                  style="height: 100%"
+                  :src="o.gameCover"
+                  alt="加载失败"
+                >
+              </div>
+              <div class="gameName" style="height: 50px">
+                {{ o.gameName }}
+              </div>
+            </el-card>
+          </a>
         </el-col>
       </el-row>
       <div class="links">
@@ -61,6 +58,26 @@
 
 <script>
 export default {
+  data() {
+    return {
+      gameList: []
+    }
+  },
+  created() {
+    this.getGameList()
+  },
+  methods: {
+    async getGameList() {
+      const { data: res } = await this.$http.get('/game/findSixthGame')
+      if (res.statue !== 200) {
+        return this.$message.error('获取游戏列表失败')
+      }
+      this.gameList = res.data.gameList
+    },
+    detailGame(id) {
+      this.$router.push(`/showDetailGame?id=${id}`)
+    }
+  }
 
 }
 </script>

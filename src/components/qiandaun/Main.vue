@@ -9,14 +9,10 @@
     <!-- 轮播图区域 -->
     <div class="carousel">
       <el-carousel height="400px" indicator-position="outside">
-        <el-carousel-item v-for="item in 5" :key="item">
-          <a href="/showDetailWallpaper">
+        <el-carousel-item v-for="item in wallpaperList" :key="item">
+          <a @click="detailWallpaper(item.id)">
             <div class="cimg">
-              <img
-                src="https://2021article.oss-cn-hangzhou.aliyuncs.com/pic/ae2483538378479f84c66a6a89384e5c_%E9%BB%98%E8%AE%A4%E5%A4%B4%E5%83%8F.jpg"
-                alt="加载失败"
-              >
-            </div></a>
+              <img :src="item.ossSrc" alt="加载失败"></div></a>
         </el-carousel-item>
       </el-carousel>
     </div>
@@ -87,24 +83,21 @@
           type="info"
         >最新文章</el-link>
         <el-row :gutter="20">
-          <el-col v-for="o in 8" :key="o" :span="6">
-            <el-card class="showbox box-card">
-              <div class="titlePic" style="height: 100px">
-                <img
-                  style="height: 100%"
-                  src="https://2021article.oss-cn-hangzhou.aliyuncs.com/pic/ae2483538378479f84c66a6a89384e5c_%E9%BB%98%E8%AE%A4%E5%A4%B4%E5%83%8F.jpg"
-                  alt=""
-                >
-              </div>
-              <div class="title" style="height: 50px">
-                <el-link
-                  style="color: black"
-                  :underline="false"
-                  type="info"
-                  href="/showDetailArticle"
-                >文章标题文章标题文章标题文章标题文章标题文章标题文章标题文章标题文章标题文章标题</el-link>
-              </div>
-            </el-card>
+          <el-col v-for="o in articleList" :key="o" :span="6">
+            <a @click="detailArticle(o.id)">
+              <el-card class="showbox box-card">
+                <div class="titlePic" style="height: 100px">
+                  <img
+                    style="height: 100%"
+                    :src="o.articleCover"
+                    alt="加载失败"
+                  >
+                </div>
+                <div class="title" style="height: 50px">
+                  {{ o.title }}
+                </div>
+              </el-card>
+            </a>
           </el-col>
         </el-row>
         <div class="links">
@@ -126,24 +119,15 @@
           type="info"
         >最新游戏</el-link>
         <el-row :gutter="20">
-          <el-col v-for="o in 8" :key="o" :span="6">
-            <el-card class="showbox box-card">
-              <div class="titlePic" style="height: 100px">
-                <img
-                  style="height: 100%"
-                  src="https://2021article.oss-cn-hangzhou.aliyuncs.com/pic/ae2483538378479f84c66a6a89384e5c_%E9%BB%98%E8%AE%A4%E5%A4%B4%E5%83%8F.jpg"
-                  alt=""
-                >
-              </div>
-              <div class="title" style="height: 50px">
-                <el-link
-                  style="color: black"
-                  :underline="false"
-                  type="info"
-                  href="/showDetailGame"
-                >文章标题文章标题文章标题文章标题文章标题文章标题文章标题文章标题文章标题文章标题</el-link>
-              </div>
-            </el-card>
+          <el-col v-for="o in gameList" :key="o" :span="6">
+            <a @click="detailGame(o.id)">
+              <el-card class="showbox box-card">
+                <div class="titlePic" style="height: 100px">
+                  <img style="height: 100%" :src="o.gameCover" alt="加载失败">
+                </div>
+                <div class="title" style="height: 50px">
+                  {{ o.gameName }}
+                </div></el-card></a>
           </el-col>
         </el-row>
         <div class="links">
@@ -159,11 +143,64 @@
   </div>
 </template>
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      wallpaperList: [],
+      articleList: [],
+      gameList: []
+    }
+  },
+  created() {
+    this.getWallpaperList()
+    this.getArticleList()
+    this.getGameList()
+  },
+  methods: {
+    //  获取最新的八张壁纸
+    async getWallpaperList() {
+      const { data: res } = await this.$http.get(
+        '/wallpaper/findEightWallpaper'
+      )
+      if (res.statue !== 200) {
+        return this.$message.error('获取壁纸列表失败')
+      }
+      this.wallpaperList = res.data.wallpaperList
+    },
+    //  跳转到壁纸的详情页
+    detailWallpaper(id) {
+      this.$router.push(`/showDetailWallpaper?id=${id}`)
+    },
+    //  获取最新的八篇文章
+    async getArticleList() {
+      const { data: res } = await this.$http.get('/article/findEightArticle')
+      if (res.statue !== 200) {
+        return this.$message.error('获取文章列表失败')
+      }
+      this.articleList = res.data.articleList
+    },
+    //  跳转到文章的详情页
+    detailArticle(id) {
+      this.$router.push(`/showDetailArticle?id=${id}`)
+    },
+    //  获取最新的八篇游戏
+    async getGameList() {
+      const { data: res } = await this.$http.get('/game/findEightGame')
+      if (res.statue !== 200) {
+        return this.$message.error('获取游戏列表失败')
+      }
+      this.gameList = res.data.gameList
+    },
+    //  跳转到游戏的详情页
+    detailGame(id) {
+      this.$router.push(`/showDetailGame?id=${id}`)
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>
-.crumbs{
+.crumbs {
   margin-top: 20px;
 }
 .carousel {

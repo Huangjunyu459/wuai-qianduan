@@ -57,8 +57,8 @@
           </template>
         </el-table-column>
         <el-table-column label="点赞数" prop="love" />
-        <el-table-column label="创建时间" prop="createTime" />
-        <el-table-column label="修改时间" prop="updateTime" />
+        <!-- <el-table-column label="创建时间" prop="createTime" />
+        <el-table-column label="修改时间" prop="updateTime" /> -->
         <el-table-column label="操作" width="250px">
           <template slot-scope="{ row }">
             <!-- 按钮提示 -->
@@ -189,18 +189,6 @@ export default {
       cb(new Error('文章id只能是数字'))
     }
 
-    //  提取码验证规则
-    var checckCode = (rule, value, cb) => {
-      //  验证的正则表达式
-      const regCode = /^[A-Za-z0-9]+$/
-      if (regCode.test(value)) {
-        //    合法的提取码
-        return cb()
-      }
-
-      cb(new Error('提取码只能是数字或英文'))
-    }
-
     return {
       //  获取文章列表的参数对象
       queryInfo: {
@@ -228,8 +216,8 @@ export default {
           { required: true, message: '请输入文章标题', trigger: 'blur' },
           {
             min: 1,
-            max: 100,
-            message: '长度在 1 到 100 个字符',
+            max: 50,
+            message: '长度在 1 到 50 个字符',
             trigger: 'blur'
           }
         ],
@@ -237,8 +225,8 @@ export default {
           { required: true, message: '请输入文章内容', trigger: 'blur' },
           {
             min: 20,
-            max: 300,
-            message: '长度在 20 到 300 个字符',
+            max: 10000,
+            message: '长度在 20 到 10000 个字符',
             trigger: 'blur'
           }
         ],
@@ -277,8 +265,8 @@ export default {
           { required: true, message: '请输入文章标题', trigger: 'blur' },
           {
             min: 1,
-            max: 100,
-            message: '长度在 1 到 100 个字符',
+            max: 50,
+            message: '长度在 1 到 50 个字符',
             trigger: 'blur'
           }
         ],
@@ -286,8 +274,8 @@ export default {
           { required: true, message: '请输入文章内容', trigger: 'blur' },
           {
             min: 20,
-            max: 300,
-            message: '长度在 20 到 300 个字符',
+            max: 10000,
+            message: '长度在 20 到 10000 个字符',
             trigger: 'blur'
           }
         ],

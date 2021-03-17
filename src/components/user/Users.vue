@@ -185,8 +185,8 @@ export default {
     //  密码验证规则
     var checkPassword = (rule, value, cb) => {
       //  验证密码的正则表达式
-      const regEamil = /^[A-Za-z0-9]+$/
-      if (regEamil.test(value)) {
+      const regPS = /^[A-Za-z0-9]+$/
+      if (regPS.test(value)) {
         //    合法的密码
         return cb()
       }

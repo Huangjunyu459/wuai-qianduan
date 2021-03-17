@@ -54,6 +54,7 @@ import DetailVideo from '../components/qiandaun/deltail/VideoDetail.vue'
 import GameDownload from '../components/qiandaun/show/GameDownload.vue'
 import PersonInfo from '../components/qiandaun/show/PersonInfo.vue'
 import PersonSetting from '../components/qiandaun/show/PersionSetting.vue'
+import Contribution from '../components/qiandaun/show/Contribution.vue'
 
 Vue.use(VueRouter)
 
@@ -251,6 +252,10 @@ const routes = [
       {
         path: '/personSetting',
         component: PersonSetting
+      },
+      {
+        path: '/contribution',
+        component: Contribution
       }
     ]
 

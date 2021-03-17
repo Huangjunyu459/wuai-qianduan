@@ -9,7 +9,7 @@
       >游戏
       </el-breadcrumb-item>
       <el-breadcrumb-item>游戏详情 </el-breadcrumb-item>
-      <el-breadcrumb-item>游戏名 </el-breadcrumb-item>
+      <el-breadcrumb-item>{{ game.gameName }} </el-breadcrumb-item>
     </el-breadcrumb>
 
     <!-- 游戏展示区域 -->
@@ -17,20 +17,15 @@
       <!-- 游戏封面图 -->
       <div class="game_cover">
         <img
-          src="https://2021article.oss-cn-hangzhou.aliyuncs.com/pic/ae2483538378479f84c66a6a89384e5c_%E9%BB%98%E8%AE%A4%E5%A4%B4%E5%83%8F.jpg"
+          :src="game.gameCover"
           alt="加载失败"
         >
       </div>
       <!-- 游戏描述 -->
       <div class="description">
-        <p>游戏描述</p>
-        <p>游戏描述</p>
-        <p>游戏描述</p>
-        <p>游戏描述</p>
-        <p>游戏描述</p>
-        <p>游戏描述</p>
-        <p>游戏描述</p>
-        <p>游戏描述</p>
+        <p v-for="item in description" :key="item">
+          {{ item }}
+        </p>
       </div>
 
       <!-- 点赞和下载区域 -->
@@ -40,13 +35,14 @@
           round
           icon="el-icon-star-off"
           type="danger"
-        >点赞</el-button>
+          @click="likes(game.id)"
+        >点赞  {{ game.love }}</el-button>
         <el-button
           class="mybtn"
           round
           icon="el-icon-download"
           type="success"
-          @click="gameDownload"
+          @click="gameDownload(game.id)"
         >下载
         </el-button>
       </div>
@@ -97,10 +93,39 @@
 </template>
 
 <script>
+import GameDownloadVue from '../show/GameDownload.vue'
 export default {
+  data() {
+    return {
+      game: '',
+      description: []
+    }
+  },
+  created() {
+    this.getGame(this.$route.query.id)
+  },
   methods: {
-    gameDownload() {
-      this.$router.push('/gameDownload')
+    async getGame(id) {
+      const { data: res } = await this.$http.get(`/game/getById?id=${id}`)
+      if (res.statue !== 200) {
+        return this.$message.error('获取游戏失败')
+      }
+      this.game = res.data.game
+      this.description = res.data.game.description.split('/')
+    },
+    async  likes(id) {
+      const { data: res } = await this.$http.get(`/game/likes?id=${id}`)
+      if (res.statue !== 200) {
+        return this.$notify.error('点赞失败')
+      }
+      this.getGame(this.$route.query.id)
+      return this.$notify({
+        message: '点赞成功',
+        type: 'success'
+      })
+    },
+    gameDownload(id) {
+      this.$router.push(`/gameDownload?id=${id}`)
     }
   }
 

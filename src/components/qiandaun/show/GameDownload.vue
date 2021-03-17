@@ -5,14 +5,14 @@
       <el-breadcrumb-item :to="{ path: '/index' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item :to="{ path: '/game' }">游戏 </el-breadcrumb-item>
       <el-breadcrumb-item>游戏下载 </el-breadcrumb-item>
-      <el-breadcrumb-item>游戏名 </el-breadcrumb-item>
+      <el-breadcrumb-item>{{ game.gameName }} </el-breadcrumb-item>
     </el-breadcrumb>
 
     <!-- 游戏下载页面 -->
     <div class="showbox">
       <!-- 游戏描述 -->
       <div class="gameName">
-        <p>你正准备下载（游戏名）</p>
+        <p>你正准备下载《{{ game.gameName }}》</p>
       </div>
     </div>
 
@@ -34,36 +34,104 @@
 
     <!-- 下载区域 -->
     <div class="download">
-      <i class="el-icon-caret-bottom">下载链接</i>
+      <i class="el-icon-caret-bottom">下载地址</i>
       <!-- 提取密码区域 -->
       <div class="download_form">
-        <i class="el-icon-unlock"><span style="margin-left:8px">提取密码</span></i>
+        <i class="el-icon-unlock"><span style="margin-left:8px" /></i>
         <el-input
-          v-model="input3"
+          v-model="bdCode"
+          :readonly="true"
           class="input-with-select"
         >
-          <el-button slot="append" class="cbtn" icon="el-icon-document-copy" />
+          <el-button
+            id="copy_bdCode"
+            slot="append"
+            class="cbtn"
+            icon="el-icon-document-copy"
+            :data-clipboard-text="bdCode"
+            @click="copyBdCode"
+          />
         </el-input>
       </div>
       <!-- 解压密码区域 -->
       <div class="download_form">
-        <i class="el-icon-key"><span style="margin-left:8px">解压密码</span></i>
+        <i class="el-icon-key"><span style="margin-left:8px" /></i>
         <el-input
-          v-model="input3"
+          v-model="dCode"
           class="input-with-select"
+          :readonly="true"
         >
-          <el-button slot="append" class="cbtn" icon="el-icon-document-copy" />
+          <el-button
+            id="copy_dCode"
+            slot="append"
+            class="cbtn"
+            icon="el-icon-document-copy"
+            :data-clipboard-text="dCode"
+            @click="copyDCode(dCode)"
+          />
         </el-input>
       </div>
 
       <!-- 下载按钮区域 -->
-      <el-button class="dbtn" icon="el-icon-download" type="success" round>下载</el-button>
+      <a :href="game.bdSrc">
+        <el-button class="dbtn" icon="el-icon-download" type="success" round>下载</el-button>
+      </a>
+
     </div>
   </div>
 </template>
 
 <script>
-export default {}
+import Clipboard from 'clipboard'
+export default {
+  data() {
+    return {
+      game: '',
+      bdCode: '',
+      dCode: ''
+    }
+  },
+  created() {
+    this.getGame(this.$route.query.id)
+  },
+  methods: {
+    async getGame(id) {
+      const { data: res } = await this.$http.get(`/game/getById?id=${id}`)
+      if (res.statue !== 200) {
+        return this.$message.error('获取游戏失败')
+      }
+      console.log(res)
+      this.game = res.data.game
+      this.bdCode = res.data.game.bdCode
+      this.dCode = res.data.game.dcode
+    },
+    copyBdCode() {
+      let clipboard = new Clipboard('#copy_bdCode')
+      clipboard.on('success', e => {
+        clipboard.destroy()
+        return this.$message.success('复制成功')
+      })
+      clipboard.on('error', e => {
+        clipboard.destroy()
+        return this.$message.error('该浏览器不支持自动复制')
+      })
+    },
+    copyDCode(dCode) {
+      if (dCode === null) {
+        return this.$message.error('解压码为空')
+      }
+      var clipboard = new Clipboard('#copy_dCode')
+      clipboard.on('success', e => {
+        clipboard.destroy()
+        return this.$message.success('复制成功')
+      })
+      clipboard.on('error', e => {
+        clipboard.destroy()
+        return this.$message.error('该浏览器不支持自动复制')
+      })
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>

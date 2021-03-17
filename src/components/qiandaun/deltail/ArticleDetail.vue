@@ -9,25 +9,21 @@
       >文章
       </el-breadcrumb-item>
       <el-breadcrumb-item>文章详情 </el-breadcrumb-item>
-      <el-breadcrumb-item>文章标题 </el-breadcrumb-item>
+      <el-breadcrumb-item>{{ article.title }} </el-breadcrumb-item>
     </el-breadcrumb>
 
     <!-- 文章封面展示区域 -->
     <div class="showbox">
       <div class="article_cover">
         <img
-          src="https://2021article.oss-cn-hangzhou.aliyuncs.com/pic/ae2483538378479f84c66a6a89384e5c_%E9%BB%98%E8%AE%A4%E5%A4%B4%E5%83%8F.jpg"
+          :src="article.articleCover"
           alt="加载失败"
         >
       </div>
       <div class="content">
-        <p>文章内容</p>
-        <p>文章内容</p>
-        <p>文章内容</p>
-        <p>文章内容</p>
-        <p>文章内容</p>
-        <p>文章内容</p>
-        <p>文章内容</p>
+        <p v-for="item in content" :key="item">
+          {{ item }}
+        </p>
       </div>
 
       <!-- 点赞和下载区域 -->
@@ -37,7 +33,8 @@
           round
           icon="el-icon-star-off"
           type="danger"
-        >点赞</el-button>
+          @click="likes(article.id)"
+        >点赞  {{ article.love }}</el-button>
       </div>
 
       <!-- 声明区域 -->
@@ -87,6 +84,36 @@
 
 <script>
 export default {
+  data() {
+    return {
+      article: '',
+      content: ''
+    }
+  },
+  created() {
+    this.getArticle(this.$route.query.id)
+  },
+  methods: {
+    async getArticle(id) {
+      const { data: res } = await this.$http.get(`/article/getById?id=${id}`)
+      if (res.statue !== 200) {
+        return this.$message.error('获取文章失败')
+      }
+      this.article = res.data.article
+      this.content = res.data.article.content.split('/')
+    },
+    async  likes(id) {
+      const { data: res } = await this.$http.get(`/article/likes?id=${id}`)
+      if (res.statue !== 200) {
+        return this.$notify.error('点赞失败')
+      }
+      this.getArticle(this.$route.query.id)
+      return this.$notify({
+        message: '点赞成功',
+        type: 'success'
+      })
+    }
+  }
 
 }
 </script>
@@ -106,6 +133,10 @@ export default {
 .article_cover img {
   width: 100%;
   height: 100%;
+}
+.content{
+  margin-top: 10px;
+  text-indent: 2em;
 }
 .btn {
   margin-top: 20px;

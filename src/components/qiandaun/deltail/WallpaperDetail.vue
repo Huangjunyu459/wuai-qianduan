@@ -8,14 +8,14 @@
       >壁纸
       </el-breadcrumb-item>
       <el-breadcrumb-item>壁纸详情 </el-breadcrumb-item>
-      <el-breadcrumb-item>壁纸名字 </el-breadcrumb-item>
+      <el-breadcrumb-item>{{ title }} </el-breadcrumb-item>
     </el-breadcrumb>
 
     <!-- 壁纸展示区域 -->
     <div class="showbox">
       <div class="wallpaper">
         <img
-          src="https://2021article.oss-cn-hangzhou.aliyuncs.com/pic/ae2483538378479f84c66a6a89384e5c_%E9%BB%98%E8%AE%A4%E5%A4%B4%E5%83%8F.jpg"
+          :src="wallpaper.ossSrc"
           alt="加载失败"
         >
       </div>
@@ -27,7 +27,8 @@
           round
           icon="el-icon-star-off"
           type="danger"
-        >点赞</el-button>
+          @click="likes(wallpaper.id)"
+        >点赞   {{ wallpaper.love }}</el-button>
         <el-button
           class="mybtn"
           round
@@ -83,7 +84,38 @@
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      wallpaper: '',
+      title: ''
+    }
+  },
+  created() {
+    this.getWallpaper(this.$route.query.id)
+  },
+  methods: {
+    async getWallpaper(id) {
+      const { data: res } = await this.$http.get(`/wallpaper/getById?id=${id}`)
+      if (res.statue !== 200) {
+        return this.$message.error('获取壁纸失败')
+      }
+      this.wallpaper = res.data.wallpaper
+      this.title = this.wallpaper.title.split('.')[0]
+    },
+    async  likes(id) {
+      const { data: res } = await this.$http.get(`/wallpaper/likes?id=${id}`)
+      if (res.statue !== 200) {
+        return this.$notify.error('点赞失败')
+      }
+      this.getWallpaper(this.$route.query.id)
+      return this.$notify({
+        message: '点赞成功',
+        type: 'success'
+      })
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>
