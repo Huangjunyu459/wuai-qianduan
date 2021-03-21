@@ -6,10 +6,14 @@
       <el-breadcrumb-item>文章 </el-breadcrumb-item>
     </el-breadcrumb>
 
-    <!-- 搜索与添加区域 -->
+    <!-- 搜索区域 -->
     <div style="margin-top: 15px;">
-      <el-input v-model="input3" placeholder="请输入内容" class="input-with-select">
-        <el-button slot="append" icon="el-icon-search" />
+      <el-input v-model="title" placeholder="请输入内容" class="input-with-select">
+        <el-button
+          slot="append"
+          icon="el-icon-search"
+          @click="findArticleByTitleExamine(title)"
+        />
       </el-input>
     </div>
 
@@ -54,7 +58,8 @@
 export default {
   data() {
     return {
-      articleList: []
+      articleList: [],
+      title: ''
     }
   },
   created() {
@@ -70,6 +75,9 @@ export default {
     },
     detailArticle(id) {
       this.$router.push(`/showDetailArticle?id=${id}`)
+    },
+    findArticleByTitleExamine(title) {
+      this.$router.push(`/findArticleByTitleExamine?title=${title}`)
     }
   }
 

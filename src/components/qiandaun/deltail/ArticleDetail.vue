@@ -137,6 +137,7 @@ export default {
 .content{
   margin-top: 10px;
   text-indent: 2em;
+  font-size: 20px;
 }
 .btn {
   margin-top: 20px;
@@ -147,6 +148,8 @@ export default {
   margin-right: 80px;
 }
 .statement {
+  margin-top: 10px;
+  margin-bottom: 15px;
   font-size: 14px;
   color: rgb(63, 64, 65);
 }
@@ -167,7 +170,7 @@ export default {
 }
 .showComment i {
   font-size: 14px;
-  margin-bottom: 10px;
+  margin: 10px 0;
 }
 .user_comment {
   width: 80%;

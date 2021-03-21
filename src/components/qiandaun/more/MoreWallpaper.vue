@@ -7,9 +7,17 @@
     </el-breadcrumb>
 
     <!-- 搜索与添加区域 -->
-    <div style="margin-top: 15px;">
-      <el-input v-model="input3" placeholder="请输入内容" class="input-with-select">
-        <el-button slot="append" icon="el-icon-search" />
+    <div style="margin-top: 15px">
+      <el-input
+        v-model="title"
+        placeholder="请输入内容"
+        class="input-with-select"
+      >
+        <el-button
+          slot="append"
+          icon="el-icon-search"
+          @click="findWallpaperByTitleExamine(title)"
+        />
       </el-input>
     </div>
 
@@ -22,24 +30,21 @@
         type="info"
       >最新壁纸</el-link>
       <el-row :gutter="20">
-        <el-col v-for="o in 30" :key="o" :span="6">
-          <el-card class="showbox box-card">
-            <div class="titlePic" style="height: 100px">
-              <img
-                style="height: 100%"
-                src="https://2021article.oss-cn-hangzhou.aliyuncs.com/pic/ae2483538378479f84c66a6a89384e5c_%E9%BB%98%E8%AE%A4%E5%A4%B4%E5%83%8F.jpg"
-                alt=""
-              >
-            </div>
-            <div class="title" style="height: 50px">
-              <el-link
-                style="color: black"
-                :underline="false"
-                type="info"
-                href="/showDetailWallpaper"
-              >文章标题文章标题文章标题文章标题文章标题文章标题文章标题文章标题文章标题文章标题</el-link>
-            </div>
-          </el-card>
+        <el-col v-for="o in wallpaperList" :key="o" :span="6">
+          <a @click="detailWallpaper(o.id)">
+            <el-card class="showbox box-card">
+              <div class="titlePic" style="height: 100px">
+                <img
+                  style="height: 100%"
+                  :src="o.ossSrc"
+                  alt="加载失败"
+                >
+              </div>
+              <div class="title" style="height: 50px">
+                {{ o.title }}
+              </div>
+            </el-card>
+          </a>
         </el-col>
       </el-row>
     </div>
@@ -47,11 +52,11 @@
     <!-- 分页区域 -->
     <div class="block">
       <el-pagination
-        :current-page="currentPage4"
+        :current-page="cpage"
         :page-sizes="[5, 10, 20, 30]"
         :page-size="100"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="400"
+        :total="total"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
@@ -61,12 +66,41 @@
 
 <script>
 export default {
-
+  data() {
+    return {
+      wallpaperList: [],
+      title: '',
+      total: 0,
+      cpage: 1
+    }
+  },
+  created() {
+    this.getWallpaperList()
+  },
+  methods: {
+    async getWallpaperList() {
+      const { data: res } = await this.$http.get(
+        '/wallpaper/findAllWallpaperExamine'
+      )
+      if (res.statue !== 200) {
+        return this.$message.error('获取壁纸列表失败')
+      }
+      this.wallpaperList = res.data.wallpaperList
+      this.total = res.data.wallpaperList.length
+    },
+    //  跳转到壁纸的详情页
+    detailWallpaper(id) {
+      this.$router.push(`/showDetailWallpaper?id=${id}`)
+    },
+    findWallpaperByTitleExamine(title) {
+      this.$router.push(`/findWallpaperByTitleExamine?title=${title}`)
+    }
+  }
 }
 </script>
 
 <style lang="less" scoped>
-.crumbs{
+.crumbs {
   margin-top: 20px;
 }
 .wallpaper {

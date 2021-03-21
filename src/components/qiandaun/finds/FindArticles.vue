@@ -3,41 +3,37 @@
     <!-- 面包屑区域 -->
     <el-breadcrumb class="crumbs" separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/index' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>更多游戏 </el-breadcrumb-item>
+      <el-breadcrumb-item>查找文章 </el-breadcrumb-item>
     </el-breadcrumb>
 
     <!-- 搜索与添加区域 -->
-    <div style="margin-top: 15px">
-      <el-input
-        v-model="gameName"
-        placeholder="请输入内容"
-        class="input-with-select"
-      >
-        <el-button
-          slot="append"
-          icon="el-icon-search"
-          @click="findGameByGameNameExamine(gameName)"
-        />
+    <!-- <div style="margin-top: 15px;">
+      <el-input v-model="title" placeholder="请输入内容" class="input-with-select">
+        <el-button slot="append" icon="el-icon-search" />
       </el-input>
-    </div>
+    </div> -->
 
-    <!-- 最新游戏区域 -->
-    <div class="game">
+    <!-- 最新壁纸区域 -->
+    <div class="article">
       <el-link
         style="font-size: 25px"
         :underline="false"
         icon="el-icon-star-on"
         type="info"
-      >最新游戏</el-link>
+      >查询结果</el-link>
       <el-row :gutter="20">
-        <el-col v-for="o in gameList" :key="o" :span="6">
-          <a @click="detailGame(o.id)">
+        <el-col v-for="o in articleList" :key="o" :span="6">
+          <a @click="detailArticle(o.id)">
             <el-card class="showbox box-card">
               <div class="titlePic" style="height: 100px">
-                <img style="height: 100%" :src="o.gameCover" alt="加载失败">
+                <img
+                  style="height: 100%"
+                  :src="o.articleCover"
+                  alt="加载失败"
+                >
               </div>
-              <div class="gameName" style="height: 50px">
-                {{ o.gameName }}
+              <div class="title" style="height: 50px">
+                {{ o.title }}
               </div>
             </el-card>
           </a>
@@ -53,8 +49,6 @@
         :page-size="100"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
       />
     </div>
   </div>
@@ -64,42 +58,37 @@
 export default {
   data() {
     return {
-      gameList: [],
-      gameName: '',
+      articleList: [],
       total: 0,
       cpage: 1
     }
   },
   created() {
-    this.getGameList()
+    this.getArticleList(this.$route.query.title)
   },
   methods: {
-    async getGameList() {
-      const { data: res } = await this.$http.get('/game/findAllGameExamine')
+    async  getArticleList(title) {
+      const { data: res } = await this.$http.get(`/article/findArticleByTitleExamine?title=${title}`)
       console.log(res)
       if (res.statue !== 200) {
-        return this.$message.error('获取游戏列表失败')
+        return this.$message.error('获取文章列表失败')
       }
-      this.gameList = res.data.gameList
-      this.total = res.data.gameList.length
+      this.articleList = res.data.articleList
+      this.total = res.data.articleList.length
     },
-    //  跳转到游戏的详情页
-    detailGame(id) {
-      this.$router.push(`/showDetailGame?id=${id}`)
-    },
-
-    findGameByGameNameExamine(gameName) {
-      this.$router.push(`/findGameByGameNameExamine?gameName=${gameName}`)
+    detailArticle(id) {
+      this.$router.push(`/showDetailArticle?id=${id}`)
     }
   }
+
 }
 </script>
 
 <style lang="less" scoped>
-.crumbs {
+.crumbs{
   margin-top: 20px;
 }
-.game {
+.article {
   width: 100%;
   margin-top: 20px;
   margin-bottom: 30px;
@@ -114,7 +103,7 @@ export default {
 .titlePic {
   height: 100px;
 }
-.gameName {
+.title {
   margin-top: 5px;
   font-size: 14px;
   height: 20px;

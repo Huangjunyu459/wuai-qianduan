@@ -9,11 +9,15 @@
     <!-- 搜索与添加区域 -->
     <div style="margin-top: 15px">
       <el-input
-        v-model="input3"
+        v-model="title"
         placeholder="请输入内容"
         class="input-with-select"
       >
-        <el-button slot="append" icon="el-icon-search" />
+        <el-button
+          slot="append"
+          icon="el-icon-search"
+          @click="findWallpaperByTitleExamine(title)"
+        />
       </el-input>
     </div>
 
@@ -48,7 +52,7 @@
                 <img
                   style="height: 100%"
                   :src="o.ossSrc"
-                  alt=""
+                  alt="加载失败"
                 >
               </div>
             </a>
@@ -80,7 +84,8 @@ export default {
   data() {
     return {
       wallpaperList: [],
-      hotWallpaperList: []
+      hotWallpaperList: [],
+      title: ''
     }
   },
   created() {
@@ -105,6 +110,9 @@ export default {
     },
     detailWallpaper(id) {
       this.$router.push(`/showDetailWallpaper?id=${id}`)
+    },
+    findWallpaperByTitleExamine(title) {
+      this.$router.push(`/findWallpaperByTitleExamine?title=${title}`)
     }
   }
 }

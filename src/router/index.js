@@ -56,6 +56,12 @@ import PersonInfo from '../components/qiandaun/show/PersonInfo.vue'
 import PersonSetting from '../components/qiandaun/show/PersionSetting.vue'
 import Contribution from '../components/qiandaun/show/Contribution.vue'
 
+import FindArticles from '../components/qiandaun/finds/FindArticles.vue'
+import FindWallpapers from '../components/qiandaun/finds/FindWallpapers.vue'
+import FindGames from '../components/qiandaun/finds/FindGames.vue'
+import FindMuiscs from '../components/qiandaun/finds/FindMusics.vue'
+import FindVideos from '../components/qiandaun/finds/FindVideos.vue'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -200,6 +206,26 @@ const routes = [
       {
         path: '/video',
         component: ShowVideo
+      },
+      {
+        path: '/findArticleByTitleExamine',
+        component: FindArticles
+      },
+      {
+        path: '/findWallpaperByTitleExamine',
+        component: FindWallpapers
+      },
+      {
+        path: '/findGameByGameNameExamine',
+        component: FindGames
+      },
+      {
+        path: '/findMusics',
+        component: FindMuiscs
+      },
+      {
+        path: '/findVideos',
+        component: FindVideos
       },
       {
         path: '/showMoreWallpaper',

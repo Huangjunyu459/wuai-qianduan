@@ -73,7 +73,10 @@
       </div>
 
       <!-- 下载按钮区域 -->
-      <a :href="game.bdSrc">
+      <a
+        :href="game.bdSrc"
+        target="_blank"
+      >
         <el-button class="dbtn" icon="el-icon-download" type="success" round>下载</el-button>
       </a>
 

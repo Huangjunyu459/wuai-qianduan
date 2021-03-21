@@ -10,11 +10,15 @@
     <!-- 搜索与添加区域 -->
     <div style="margin-top: 15px">
       <el-input
-        v-model="input3"
+        v-model="gameName"
         placeholder="请输入内容"
         class="input-with-select"
       >
-        <el-button slot="append" icon="el-icon-search" />
+        <el-button
+          slot="append"
+          icon="el-icon-search"
+          @click="findGameByGameNameExamine(gameName)"
+        />
       </el-input>
     </div>
 
@@ -60,7 +64,8 @@
 export default {
   data() {
     return {
-      gameList: []
+      gameList: [],
+      gameName: ''
     }
   },
   created() {
@@ -76,6 +81,9 @@ export default {
     },
     detailGame(id) {
       this.$router.push(`/showDetailGame?id=${id}`)
+    },
+    findGameByGameNameExamine(gameName) {
+      this.$router.push(`/findGameByGameNameExamine?gameName=${gameName}`)
     }
   }
 
@@ -83,7 +91,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.wallpaper {
+.game {
   width: 100%;
   margin-top: 20px;
   margin-bottom: 30px;

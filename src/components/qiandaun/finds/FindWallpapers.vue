@@ -3,44 +3,51 @@
     <!-- 面包屑区域 -->
     <el-breadcrumb class="crumbs" separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/index' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>更多游戏 </el-breadcrumb-item>
+      <el-breadcrumb-item>查找壁纸 </el-breadcrumb-item>
     </el-breadcrumb>
 
     <!-- 搜索与添加区域 -->
-    <div style="margin-top: 15px">
-      <el-input
-        v-model="gameName"
-        placeholder="请输入内容"
-        class="input-with-select"
-      >
+    <!-- <div style="margin-top: 15px;">
+      <el-input v-model="query" placeholder="请输入内容" class="input-with-select">
         <el-button
           slot="append"
           icon="el-icon-search"
-          @click="findGameByGameNameExamine(gameName)"
+          @click="findWallpaperByTitleExamine(query)"
         />
       </el-input>
-    </div>
+    </div> -->
 
-    <!-- 最新游戏区域 -->
-    <div class="game">
+    <!-- 最新壁纸区域 -->
+    <div class="wallpaper">
       <el-link
         style="font-size: 25px"
         :underline="false"
         icon="el-icon-star-on"
         type="info"
-      >最新游戏</el-link>
+      >查询结果</el-link>
       <el-row :gutter="20">
-        <el-col v-for="o in gameList" :key="o" :span="6">
-          <a @click="detailGame(o.id)">
-            <el-card class="showbox box-card">
+        <el-col v-for="o in wallpaperList" :key="o" :span="6">
+          <el-card class="showbox box-card">
+            <a
+              @click="detailWallpaper(o.id)"
+            >
               <div class="titlePic" style="height: 100px">
-                <img style="height: 100%" :src="o.gameCover" alt="加载失败">
+                <img
+                  style="height: 100%"
+                  :src="o.ossSrc"
+                  alt="加载失败"
+                >
               </div>
-              <div class="gameName" style="height: 50px">
-                {{ o.gameName }}
-              </div>
-            </el-card>
-          </a>
+            </a>
+            <div class="title" style="height: 50px">
+              <el-link
+                style="color: black"
+                :underline="false"
+                type="info"
+                @click="detailWallpaper(o.id)"
+              > {{ o.title }}</el-link>
+            </div>
+          </el-card>
         </el-col>
       </el-row>
     </div>
@@ -64,42 +71,36 @@
 export default {
   data() {
     return {
-      gameList: [],
-      gameName: '',
+      wallpaperList: [],
       total: 0,
       cpage: 1
     }
   },
   created() {
-    this.getGameList()
+    this.getwallpaperList(this.$route.query.title)
   },
   methods: {
-    async getGameList() {
-      const { data: res } = await this.$http.get('/game/findAllGameExamine')
-      console.log(res)
+    async  getwallpaperList(title) {
+      const { data: res } = await this.$http.get(`/wallpaper/findWallpaperByTitleExamine?title=${title}`)
       if (res.statue !== 200) {
-        return this.$message.error('获取游戏列表失败')
+        return this.$message.error('获取壁纸列表失败')
       }
-      this.gameList = res.data.gameList
-      this.total = res.data.gameList.length
+      this.wallpaperList = res.data.wallpaperList
+      this.total = res.data.wallpaperList.length
     },
-    //  跳转到游戏的详情页
-    detailGame(id) {
-      this.$router.push(`/showDetailGame?id=${id}`)
-    },
-
-    findGameByGameNameExamine(gameName) {
-      this.$router.push(`/findGameByGameNameExamine?gameName=${gameName}`)
+    detailWallpaper(id) {
+      this.$router.push(`/showDetailWallpaper?id=${id}`)
     }
   }
+
 }
 </script>
 
 <style lang="less" scoped>
-.crumbs {
+.crumbs{
   margin-top: 20px;
 }
-.game {
+.wallpaper {
   width: 100%;
   margin-top: 20px;
   margin-bottom: 30px;
@@ -114,7 +115,7 @@ export default {
 .titlePic {
   height: 100px;
 }
-.gameName {
+.title {
   margin-top: 5px;
   font-size: 14px;
   height: 20px;
