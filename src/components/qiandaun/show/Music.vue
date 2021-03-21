@@ -7,9 +7,17 @@
     </el-breadcrumb>
 
     <!-- 搜索与添加区域 -->
-    <div style="margin-top: 15px;">
-      <el-input v-model="input3" placeholder="请输入内容" class="input-with-select">
-        <el-button slot="append" icon="el-icon-search" />
+    <div style="margin-top: 15px">
+      <el-input
+        v-model="song"
+        placeholder="请输入内容"
+        class="input-with-select"
+      >
+        <el-button
+          slot="append"
+          icon="el-icon-search"
+          @click="findMusicBySongExamine(song)"
+        />
       </el-input>
     </div>
 
@@ -22,20 +30,17 @@
         type="info"
       >最新音频</el-link>
       <el-row :gutter="20">
-        <el-col v-for="o in 16" :key="o" :span="6">
-          <el-card class="showbox box-card">
-            <div>
-              <audio class="audio" src="https://2021article.oss-cn-hangzhou.aliyuncs.com/music/b8d44d3f763a4c7e9a97106e77565594_丸子呦 - 广寒宫.mp3" controls="controls" />
-            </div>
-            <div class="song" style="height: 50px">
-              <el-link
-                style="color: black"
-                :underline="false"
-                type="info"
-                href="/showDetailMusic"
-              >歌手-歌曲名</el-link>
-            </div>
-          </el-card>
+        <el-col v-for="o in musicList" :key="o" :span="6">
+          <a @click="detailMusic(o.id)">
+            <el-card class="showbox box-card">
+              <div>
+                <audio class="audio" :src="o.ossSrc" controls="controls" />
+              </div>
+              <div class="song" style="height: 50px">
+                {{ o.singer }}----{{ o.song }}
+              </div>
+            </el-card>
+          </a>
         </el-col>
       </el-row>
       <div class="links">
@@ -47,22 +52,43 @@
         >更多音频资讯</el-link>
       </div>
     </div>
-
   </div>
-
 </template>
 
 <script>
 export default {
-
+  data() {
+    return {
+      musicList: [],
+      song: ''
+    }
+  },
+  created() {
+    this.getMusicList()
+  },
+  methods: {
+    async getMusicList() {
+      const { data: res } = await this.$http.get(`/music/findSixthMusic`)
+      if (res.statue !== 200) {
+        return this.$message.error('获取音乐列表失败')
+      }
+      this.musicList = res.data.musicList
+    },
+    detailMusic(id) {
+      this.$router.push(`/showDetailMusic?id=${id}`)
+    },
+    findMusicBySongExamine(song) {
+      this.$router.push(`/findMusicBySongExamine?song=${song}`)
+    }
+  }
 }
 </script>
 
 <style lang="less" scoped>
-.crumbs{
+.crumbs {
   margin-top: 20px;
 }
-.music{
+.music {
   width: 100%;
   margin-top: 20px;
   margin-bottom: 30px;
@@ -74,7 +100,7 @@ export default {
 .el-card {
   margin-top: 20px;
 }
-.audio{
+.audio {
   width: 180px;
 }
 .song {

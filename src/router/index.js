@@ -220,11 +220,11 @@ const routes = [
         component: FindGames
       },
       {
-        path: '/findMusics',
+        path: '/findMusicBySongExamine',
         component: FindMuiscs
       },
       {
-        path: '/findVideos',
+        path: '/findVideoByVideoNameExamine',
         component: FindVideos
       },
       {

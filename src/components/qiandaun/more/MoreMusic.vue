@@ -9,11 +9,15 @@
     <!-- 搜索与添加区域 -->
     <div style="margin-top: 15px">
       <el-input
-        v-model="input3"
+        v-model="song"
         placeholder="请输入内容"
         class="input-with-select"
       >
-        <el-button slot="append" icon="el-icon-search" />
+        <el-button
+          slot="append"
+          icon="el-icon-search"
+          @click="findMusicBySongExamine(song)"
+        />
       </el-input>
     </div>
 
@@ -26,24 +30,17 @@
         type="info"
       >最新音频</el-link>
       <el-row :gutter="20">
-        <el-col v-for="o in 30" :key="o" :span="6">
-          <el-card class="showbox box-card">
-            <div>
-              <audio
-                class="audio"
-                src="https://2021article.oss-cn-hangzhou.aliyuncs.com/music/b8d44d3f763a4c7e9a97106e77565594_丸子呦 - 广寒宫.mp3"
-                controls="controls"
-              />
-            </div>
-            <div class="song" style="height: 50px">
-              <el-link
-                style="color: black"
-                :underline="false"
-                type="info"
-                href="/showDetailMusic"
-              >歌手-歌曲名</el-link>
-            </div>
-          </el-card>
+        <el-col v-for="o in musicList" :key="o" :span="6">
+          <a @click="detailMusic(o.id)">
+            <el-card class="showbox box-card">
+              <div>
+                <audio class="audio" :src="o.ossSrc" controls="controls" />
+              </div>
+              <div class="song" style="height: 50px">
+                {{ o.singer }}----{{ o.song }}
+              </div>
+            </el-card>
+          </a>
         </el-col>
       </el-row>
     </div>
@@ -51,11 +48,11 @@
     <!-- 分页区域 -->
     <div class="block">
       <el-pagination
-        :current-page="currentPage4"
+        :current-page="cpage"
         :page-sizes="[5, 10, 20, 30]"
         :page-size="100"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="400"
+        :total="total"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
@@ -64,7 +61,37 @@
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      musicList: [],
+      song: '',
+      total: 0,
+      cpage: 1
+    }
+  },
+  created() {
+    this.getMusicList()
+  },
+  methods: {
+    async getMusicList() {
+      const { data: res } = await this.$http.get('/music/findAllMusicExamine')
+      if (res.statue !== 200) {
+        return this.$message.error('获取音乐列表失败')
+      }
+      this.musicList = res.data.musicList
+      this.total = res.data.musicList.length
+    },
+    //  跳转到游戏的详情页
+    detailMusic(id) {
+      this.$router.push(`/showDetailMusic?id=${id}`)
+    },
+
+    findMusicBySongExamine(song) {
+      this.$router.push(`/findMusicBySongExamine?song=${song}`)
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>

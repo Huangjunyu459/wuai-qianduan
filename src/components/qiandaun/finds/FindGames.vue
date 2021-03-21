@@ -3,7 +3,7 @@
     <!-- 面包屑区域 -->
     <el-breadcrumb class="crumbs" separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/index' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>查找壁纸 </el-breadcrumb-item>
+      <el-breadcrumb-item>查找游戏 </el-breadcrumb-item>
     </el-breadcrumb>
 
     <!-- 搜索与添加区域 -->
@@ -23,27 +23,22 @@
       >查询结果</el-link>
       <el-row :gutter="20">
         <el-col v-for="o in gameList" :key="o" :span="6">
-          <el-card class="showbox box-card">
-            <a
-              @click="detailGame(o.id)"
-            >
+          <a @click="detailGame(o.id)">
+            <el-card class="showbox box-card">
               <div class="titlePic" style="height: 100px">
-                <img
-                  style="height: 100%"
-                  :src="o.gameCover"
-                  alt="加载失败"
-                >
+                <img style="height: 100%" :src="o.gameCover" alt="加载失败">
               </div>
-            </a>
-            <div class="title" style="height: 50px">
-              <el-link
-                style="color: black"
-                :underline="false"
-                type="info"
-                @click="detailGame(o.id)"
-              > {{ o.gameName }}</el-link>
-            </div>
-          </el-card>
+              <div class="title" style="height: 50px">
+                <el-link
+                  style="color: black"
+                  :underline="false"
+                  type="info"
+                  @click="detailGame(o.id)"
+                >
+                  {{ o.gameName }}</el-link>
+              </div>
+            </el-card>
+          </a>
         </el-col>
       </el-row>
     </div>
@@ -76,8 +71,10 @@ export default {
     this.getGameList(this.$route.query.gameName)
   },
   methods: {
-    async  getGameList(gameName) {
-      const { data: res } = await this.$http.get(`/game/findGameByGameNameExamine?gameName=${gameName}`)
+    async getGameList(gameName) {
+      const { data: res } = await this.$http.get(
+        `/game/findGameByGameNameExamine?gameName=${gameName}`
+      )
       if (res.statue !== 200) {
         return this.$message.error('获取壁纸列表失败')
       }
@@ -88,12 +85,11 @@ export default {
       this.$router.push(`/showDetailGame?id=${id}`)
     }
   }
-
 }
 </script>
 
 <style lang="less" scoped>
-.crumbs{
+.crumbs {
   margin-top: 20px;
 }
 .game {

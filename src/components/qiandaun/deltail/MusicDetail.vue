@@ -8,21 +8,21 @@
       >音乐
       </el-breadcrumb-item>
       <el-breadcrumb-item>音频详情 </el-breadcrumb-item>
-      <el-breadcrumb-item>音乐名 </el-breadcrumb-item>
+      <el-breadcrumb-item>{{ music.song }} </el-breadcrumb-item>
     </el-breadcrumb>
 
     <!-- 壁纸展示区域 -->
     <div class="showbox">
       <div class="music">
         <img
-          src="https://2021article.oss-cn-hangzhou.aliyuncs.com/pic/ae2483538378479f84c66a6a89384e5c_%E9%BB%98%E8%AE%A4%E5%A4%B4%E5%83%8F.jpg"
+          :src="music.musicCover"
           alt="加载失败"
         >
       </div>
-      <span>歌手-歌曲名.mp3</span>
+      <span style="font-size:20px">{{ music.singer }}-{{ music.song }}</span>
       <br>
       <!-- 音乐播放器组件 -->
-      <audio controls="controls" src="https://2021article.oss-cn-hangzhou.aliyuncs.com/music/b8d44d3f763a4c7e9a97106e77565594_丸子呦 - 广寒宫.mp3" />
+      <audio controls="controls" :src="music.ossSrc" />
       <!-- 点赞和下载区域 -->
       <div class="btn">
         <el-button
@@ -30,7 +30,8 @@
           round
           icon="el-icon-star-off"
           type="danger"
-        >点赞</el-button>
+          @click="likes(music.id)"
+        >点赞   {{ music.love }}</el-button>
         <el-button
           class="mybtn"
           round
@@ -87,6 +88,34 @@
 
 <script>
 export default {
+  data() {
+    return {
+      music: ''
+    }
+  },
+  created() {
+    this.getMusic(this.$route.query.id)
+  },
+  methods: {
+    async getMusic(id) {
+      const { data: res } = await this.$http.get(`/music/getById?id=${id}`)
+      if (res.statue !== 200) {
+        return this.$message.error('获取音乐失败')
+      }
+      this.music = res.data.music
+    },
+    async  likes(id) {
+      const { data: res } = await this.$http.get(`/music/likes?id=${id}`)
+      if (res.statue !== 200) {
+        return this.$notify.error('点赞失败')
+      }
+      this.getMusic(this.$route.query.id)
+      return this.$notify({
+        message: '点赞成功',
+        type: 'success'
+      })
+    }
+  }
 
 }
 </script>

@@ -8,13 +8,17 @@
 
     <!-- 搜索与添加区域 -->
     <div style="margin-top: 15px;">
-      <el-input v-model="input3" placeholder="请输入内容" class="input-with-select">
-        <el-button slot="append" icon="el-icon-search" />
+      <el-input v-model="videoName" placeholder="请输入内容" class="input-with-select">
+        <el-button
+          slot="append"
+          icon="el-icon-search"
+          @click="findVideoByVideoNameExamine(videoName)"
+        />
       </el-input>
     </div>
 
     <!-- 最新视频区域 -->
-    <div class="music">
+    <div class="video">
       <el-link
         style="font-size: 25px"
         :underline="false"
@@ -22,20 +26,21 @@
         type="info"
       >最新视频</el-link>
       <el-row :gutter="20">
-        <el-col v-for="o in 16" :key="o" :span="6">
-          <el-card class="showbox box-card">
-            <div>
-              <video class="shipin" src="https://2021article.oss-cn-hangzhou.aliyuncs.com/video/c6886c7117de4ea38102393b717de17e_%E7%8C%AB%E7%8C%AB%E6%95%99%E4%BD%A0%E6%97%A9%E4%B8%8A%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E6%B8%85%E9%86%92.mp4" controls="controls" />
-            </div>
-            <div class="videoName" style="height: 50px">
-              <el-link
-                style="color: black"
-                :underline="false"
-                type="info"
-                href="/showDetailVideo"
-              >视频名</el-link>
-            </div>
-          </el-card>
+        <el-col v-for="o in videoList" :key="o" :span="6">
+          <a @click="detailVideo(o.id)">
+            <el-card class="showbox box-card">
+              <div>
+                <video
+                  class="shipin"
+                  :src="o.ossSrc"
+                  controls="controls"
+                />
+              </div>
+              <div class="videoName" style="height: 50px">
+                {{ o.videoName }}
+              </div>
+            </el-card>
+          </a>
         </el-col>
       </el-row>
       <div class="links">
@@ -52,7 +57,30 @@
 
 <script>
 export default {
-
+  data() {
+    return {
+      videoList: [],
+      videoName: ''
+    }
+  },
+  created() {
+    this.getVideoList()
+  },
+  methods: {
+    async getVideoList() {
+      const { data: res } = await this.$http.get('/video/findSixthVideo')
+      if (res.statue !== 200) {
+        return this.$message.error('获取视频列表失败')
+      }
+      this.videoList = res.data.videoList
+    },
+    detailVideo(id) {
+      this.$router.push(`/showDetailVideo?id=${id}`)
+    },
+    findVideoByVideoNameExamine(videoName) {
+      this.$router.push(`/findVideoByVideoNameExamine?videoName=${videoName}`)
+    }
+  }
 }
 </script>
 
