@@ -134,6 +134,16 @@ export default {
         ]
       }
     }
+  },
+  created() {
+    this.getUser(this.$route.query.id)
+  },
+  methods: {
+    async getUser(id) {
+      const { data: res } = await this.$http.get(`/user/findUserById?id=${id}`)
+      console.log(res)
+      this.editForm = res.data.user
+    }
   }
 }
 </script>

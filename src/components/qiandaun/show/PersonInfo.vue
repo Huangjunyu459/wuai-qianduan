@@ -7,8 +7,11 @@
         alt=""
       >
     </div>
-    <span>用户名</span>
-    <div class="level">用户级别</div>
+    <span>{{ user.username }}</span>
+    <div class="level">
+      <div v-show="user.state === 1">普通用户</div>
+      <div v-show="user.state === 2">VIP</div>
+    </div>
 
     <!-- 用户信息区域 -->
     <div class="info">
@@ -24,23 +27,23 @@
       <el-tag style="border-radius: 25px; margin: 10px 0">基本信息</el-tag>
       <div v-if="infoBox" class="infoBox">
         <div class="infoBox-first">昵称</div>
-        <div class="infoBox-second">用户名</div>
+        <div class="infoBox-second">{{ user.username }}</div>
         <br>
 
         <div class="infoBox-first">UID</div>
-        <div class="infoBox-second">用户id</div>
+        <div class="infoBox-second">{{ user.id }}</div>
         <br>
 
         <div class="infoBox-first">描述</div>
-        <div class="infoBox-second">用户个签</div>
+        <div class="infoBox-second" v-text="user.sign===null?'暂无描述':user.sign" />
         <br>
 
         <div class="infoBox-first">评论统计</div>
         <div class="infoBox-second">0</div>
         <br>
 
-        <div class="infoBox-first">昵称</div>
-        <div class="infoBox-second">用户名</div>
+        <div class="infoBox-first">积分</div>
+        <div class="infoBox-second">{{ user.score }}</div>
         <br>
       </div>
       <div v-if="articleBox">暂无文章资料</div>
@@ -55,10 +58,19 @@ export default {
     return {
       infoBox: true,
       articleBox: false,
-      commentBox: false
+      commentBox: false,
+      user: ''
     }
   },
+  created() {
+    this.getUser(this.$route.query.id)
+  },
   methods: {
+    async getUser(id) {
+      const { data: res } = await this.$http.get(`/user/findUserById?id=${id}`)
+      console.log(res)
+      this.user = res.data.user
+    },
     showInfoBox() {
       this.articleBox = false
       this.commentBox = false

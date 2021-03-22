@@ -54,16 +54,16 @@
         @mouseover="showUserInfo"
         @mouseout="NoShowUserInfo"
       >
-        <i class="el-icon-medal"><span>用户积分</span></i>
+        <i class="el-icon-medal"><span>{{ user.score }}</span></i>
         <div class="psetting">
           个人设置<br>
           <el-link
-            href="/personInfo"
             :underline="false"
+            @click="showPersonInfo(user.id)"
           ><i class="el-icon-user-solid">我的概述</i></el-link><br>
           <el-link
-            href="personSetting"
             :underline="false"
+            @click="showPersonSetting(user.id)"
           ><i class="el-icon-s-tools">我的设置</i></el-link><br>
           <el-link
             :underline="false"
@@ -156,7 +156,7 @@
               </el-form-item>
             </el-form>
             <el-button
-              style="border-radius: 25px; "
+              style="border-radius: 25px"
               type="primary"
             ><i class="el-icon-message">发送验证码到邮箱</i></el-button>
             <el-button
@@ -235,6 +235,7 @@ export default {
       loginFormVisible: false,
       // 用户信息是否显示
       userInfo: false,
+      user: '',
       loginForm: {
         username: '',
         password: ''
@@ -304,7 +305,15 @@ export default {
       }
     }
   },
+  created() {
+    this.getUser()
+  },
   methods: {
+    async getUser() {
+      const { data: res } = await this.$http.get(`/user/findUserById?id=9`)
+      console.log(res)
+      this.user = res.data.user
+    },
     showUserInfo() {
       this.userInfo = true
     },
@@ -324,6 +333,12 @@ export default {
     logout: function() {
       window.sessionStorage.clear()
       this.$router.push('/index')
+    },
+    showPersonInfo(id) {
+      this.$router.push(`/personInfo?id=${id}`)
+    },
+    showPersonSetting(id) {
+      this.$router.push(`/personSetting?id=${id}`)
     }
   }
 }
