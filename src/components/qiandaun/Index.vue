@@ -67,14 +67,20 @@
           ><i class="el-icon-s-tools">我的设置</i></el-link><br>
           <el-link
             :underline="false"
+            @click="signIn(user.id)"
+          ><i
+            class="el-icon-finished"
+          >签到</i></el-link><br>
+          <el-link
+            :underline="false"
             @click="logout"
           ><i class="el-icon-switch-button">登出</i></el-link><br>
         </div>
         <div class="asetting">
           文章管理<br>
           <el-link
-            href="/contribution"
             :underline="false"
+            @click="$router.push('/contribution')"
           ><i class="el-icon-edit">up投稿</i></el-link><br>
           <el-link
             :underline="false"
@@ -101,8 +107,8 @@
               :model="loginForm"
               label-width="100px"
             >
-              <el-form-item label="昵称">
-                <el-input v-model="loginForm.username" />
+              <el-form-item label="邮箱">
+                <el-input v-model="loginForm.email" />
               </el-form-item>
               <el-form-item label="密码">
                 <el-input v-model="loginForm.password" />
@@ -111,6 +117,7 @@
             <el-button
               style="border-radius: 25px; margin-left: 150px; width: 150px"
               type="success"
+              @click="userLogin(loginForm)"
             ><i class="el-icon-check">登录</i></el-button>
           </el-tab-pane>
           <el-tab-pane label="注册" name="register">
@@ -121,10 +128,10 @@
               label-width="100px"
             >
               <el-form-item label="昵称" prop="username">
-                <el-input v-model="registerForm.username" />
+                <el-input v-model="registerForm.username" @blur="checkUser(registerForm.username)" />
               </el-form-item>
               <el-form-item label="邮箱" prop="email">
-                <el-input v-model="registerForm.email" />
+                <el-input v-model="registerForm.email" @blur="checkEmail(registerForm.email)" />
               </el-form-item>
               <el-form-item label="密码" prop="password">
                 <el-input v-model="registerForm.password" />
@@ -133,6 +140,7 @@
             <el-button
               style="border-radius: 25px; margin-left: 150px; width: 150px"
               type="success"
+              @click="registe"
             ><i class="el-icon-check">注册</i></el-button>
           </el-tab-pane>
           <el-tab-pane label="丢失密码" name="findPS">
@@ -230,14 +238,14 @@ export default {
     }
     return {
       // 用户登录状态
-      islogin: true,
+      islogin: false,
       //  控制用户登录框显示与隐藏
       loginFormVisible: false,
       // 用户信息是否显示
       userInfo: false,
       user: '',
       loginForm: {
-        username: '',
+        email: '',
         password: ''
       },
       registerForm: {
@@ -306,12 +314,14 @@ export default {
     }
   },
   created() {
-    this.getUser()
+
   },
   methods: {
-    async getUser() {
-      const { data: res } = await this.$http.get(`/user/findUserById?id=9`)
-      console.log(res)
+    async getUser(email) {
+      const { data: res } = await this.$http.get(`/user/findUserByEmail?email=${email}`)
+      if (res.statue !== 200) {
+        return this.$message.error('获取用户失败')
+      }
       this.user = res.data.user
     },
     showUserInfo() {
@@ -329,6 +339,13 @@ export default {
       this.$refs.registerFormRef.resetFields()
       this.$refs.findPSFormRef.resetFields()
     },
+    async  signIn(id) {
+      const { data: res } = await this.$http.get(`/user/signIn?id=${id}`)
+      if (res.statue !== 200) {
+        return this.$message.error('签到失败')
+      }
+      return this.$message.success('签到成功')
+    },
     //    退出功能
     logout: function() {
       window.sessionStorage.clear()
@@ -339,6 +356,39 @@ export default {
     },
     showPersonSetting(id) {
       this.$router.push(`/personSetting?id=${id}`)
+    },
+    async  userLogin(loginForm) {
+      const { data: res } = await this.$http.post(`/user/login?email=${loginForm.email}&password=${loginForm.password}`)
+      if (res.statue !== 200) {
+        return this.$message.error('登录失败')
+      }
+      this.getUser(loginForm.email)
+      this.islogin = true
+      this.loginFormVisible = false
+      this.$router.push('/main')
+    },
+    async checkUser(username) {
+      const { data: res } = await this.$http.get(`/user/findUserByUsername?username=${username}`)
+      if (res.statue === 200 && res.data.user !== null) {
+        return this.$message.error('已存在该用户名')
+      }
+      return this.$message.success('可以使用该用户名')
+    },
+    async checkEmail(email) {
+      const { data: res } = await this.$http.get(`/user/findUserByEmail?email=${email}`)
+      if (res.statue === 200 && res.data.user !== null) {
+        return this.$message.error('已存在该邮箱')
+      }
+      return this.$message.success('可以使用该邮箱')
+    },
+    async registe() {
+      const { data: res } = await this.$http.post(`/user/register`, this.registerForm)
+      if (res.statue !== 200) {
+        return this.$message.error('注册失败')
+      }
+      this.$refs.registerFormRef.resetFields()
+      this.loginFormVisible = false
+      return this.$message.success('注册成功')
     }
   }
 }

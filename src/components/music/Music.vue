@@ -39,7 +39,6 @@
         <el-table-column label="音频id" prop="id" />
         <el-table-column label="歌手名" prop="singer" />
         <el-table-column label="歌曲名" prop="song" />
-        <el-table-column label="oos歌曲名" prop="ossSong" />
         <el-table-column label="阿里云地址" prop="ossSrc" />
         <el-table-column label="上传的作者id" prop="authorId" />
         <el-table-column label="所属分类" prop="categoryId">
@@ -117,9 +116,6 @@
         <el-form-item label="歌曲名" prop="song">
           <el-input v-model="addForm.song" />
         </el-form-item>
-        <el-form-item label="oss歌曲名" prop="ossSong">
-          <el-input v-model="addForm.ossSong" />
-        </el-form-item>
         <el-form-item label="阿里云地址" prop="ossSrc">
           <el-input v-model="addForm.ossSrc" />
         </el-form-item>
@@ -152,9 +148,6 @@
         </el-form-item>
         <el-form-item label="歌曲名" prop="song">
           <el-input v-model="editForm.song" />
-        </el-form-item>
-        <el-form-item label="oss歌曲名" prop="ossSong">
-          <el-input v-model="editForm.ossSong" />
         </el-form-item>
         <el-form-item label="阿里云地址" prop="ossSrc">
           <el-input v-model="editForm.ossSrc" />
@@ -203,7 +196,6 @@ export default {
       addForm: {
         singer: '',
         song: '',
-        ossSong: '',
         ossSrc: '',
         authorId: ''
       },
@@ -224,15 +216,6 @@ export default {
             min: 1,
             max: 50,
             message: '长度在 1 到 50 个字符',
-            trigger: 'blur'
-          }
-        ],
-        ossSong: [
-          { required: true, message: 'oss歌曲名', trigger: 'blur' },
-          {
-            min: 10,
-            max: 100,
-            message: '长度在 10 到 100 个字符',
             trigger: 'blur'
           }
         ],
@@ -262,7 +245,6 @@ export default {
       editForm: {
         singer: '',
         song: '',
-        ossSong: '',
         ossSrc: '',
         love: 0
       },
@@ -283,15 +265,6 @@ export default {
             min: 1,
             max: 50,
             message: '长度在 1 到 50 个字符',
-            trigger: 'blur'
-          }
-        ],
-        ossSong: [
-          { required: true, message: 'oss歌曲名', trigger: 'blur' },
-          {
-            min: 10,
-            max: 100,
-            message: '长度在 10 到 100 个字符',
             trigger: 'blur'
           }
         ],

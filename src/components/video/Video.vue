@@ -146,9 +146,6 @@
         <el-form-item label="视频名" prop="videoName">
           <el-input v-model="editForm.videoName" />
         </el-form-item>
-        <el-form-item label="oss视频名" prop="ossName">
-          <el-input v-model="editForm.ossName" />
-        </el-form-item>
         <el-form-item label="阿里云地址" prop="ossSrc">
           <el-input v-model="editForm.ossSrc" />
         </el-form-item>
@@ -195,7 +192,6 @@ export default {
       //    添加视频的表单数据
       addForm: {
         videoName: '',
-        ossName: '',
         ossSrc: '',
         authorId: ''
       },
@@ -207,15 +203,6 @@ export default {
             min: 1,
             max: 50,
             message: '长度在 1 到 50 个字符',
-            trigger: 'blur'
-          }
-        ],
-        ossName: [
-          { required: true, message: '请输入ossName', trigger: 'blur' },
-          {
-            min: 20,
-            max: 200,
-            message: '长度在 20 到 200 个字符',
             trigger: 'blur'
           }
         ],
@@ -244,7 +231,6 @@ export default {
       //    查询到的视频信息保存对象
       editForm: {
         videoName: '',
-        ossName: '',
         ossSrc: '',
         love: 0
       },
@@ -256,15 +242,6 @@ export default {
             min: 1,
             max: 50,
             message: '长度在 1 到 50 个字符',
-            trigger: 'blur'
-          }
-        ],
-        ossName: [
-          { required: true, message: '请输入ossName', trigger: 'blur' },
-          {
-            min: 20,
-            max: 200,
-            message: '长度在 20 到 200 个字符',
             trigger: 'blur'
           }
         ],

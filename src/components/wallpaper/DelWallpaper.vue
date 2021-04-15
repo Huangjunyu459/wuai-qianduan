@@ -32,7 +32,6 @@
         <el-table-column label="序号" type="index" />
         <el-table-column label="id" prop="id" />
         <el-table-column label="壁纸标题" prop="title" />
-        <el-table-column label="oss标题" prop="ossTitle" />
         <el-table-column label="阿里云地址" prop="ossSrc" />
         <el-table-column label="上传的作者id" prop="authorId" />
         <el-table-column label="所属分类" prop="categoryId">

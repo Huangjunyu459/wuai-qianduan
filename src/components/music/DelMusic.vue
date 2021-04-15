@@ -33,7 +33,6 @@
         <el-table-column label="音频id" prop="id" />
         <el-table-column label="歌手名" prop="singer" />
         <el-table-column label="歌曲名" prop="song" />
-        <el-table-column label="oos歌曲名" prop="ossSong" />
         <el-table-column label="阿里云地址" prop="ossSrc" />
         <el-table-column label="上传的作者id" prop="authorId" />
         <el-table-column label="所属分类" prop="categoryId">

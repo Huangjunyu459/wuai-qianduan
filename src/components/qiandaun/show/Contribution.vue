@@ -27,11 +27,13 @@
             </el-form-item>
             <el-form-item label="文章封面">
               <el-upload
+                ref="articleRef"
                 class="upload-demo"
                 drag
                 name="file"
-                action="https://jsonplaceholder.typicode.com/posts/"
+                action="http://127.0.0.1:8081/oss/uploadArticle"
                 :multiple="false"
+                :on-success="handleArticleSuccess"
               >
                 <i class="el-icon-upload" />
                 <div class="el-upload__text">将图片拖到此处，或<em>点击上传</em></div>
@@ -46,6 +48,7 @@
             size="mini"
             round
             type="success"
+            @click="uploadArticle"
           ><i class="el-icon-check">上传文章</i></el-button>
         </div>
       </el-tab-pane>
@@ -53,15 +56,17 @@
         <div>
           <el-form ref="wallpaperFormRef" :model="wallpaperForm" :rules="wallpaperFormRules" label-width="100px" class="demo-ruleForm">
             <el-form-item label="壁纸标题" prop="title">
-              <el-input v-model="wallpaerForm.title" />
+              <el-input v-model="wallpaperForm.title" />
             </el-form-item>
             <el-form-item label="壁纸">
               <el-upload
+                ref="wallpaperRef"
                 class="upload-demo"
                 drag
                 name="file"
-                action="https://jsonplaceholder.typicode.com/posts/"
+                action="http://127.0.0.1:8081/oss/uploadPic"
                 :multiple="false"
+                :on-success="handleWallpaperSuccess"
               >
                 <i class="el-icon-upload" />
                 <div class="el-upload__text">将图片拖到此处，或<em>点击上传</em></div>
@@ -76,6 +81,7 @@
             size="mini"
             round
             type="success"
+            @click="uploadWallpaper"
           ><i class="el-icon-check">上传壁纸</i></el-button>
         </div>
       </el-tab-pane>
@@ -96,11 +102,13 @@
             </el-form-item>
             <el-form-item label="游戏封面">
               <el-upload
+                ref="gameRef"
                 class="upload-demo"
                 drag
                 name="file"
-                action="https://jsonplaceholder.typicode.com/posts/"
+                action="http://127.0.0.1:8081/oss/uploadGameCover"
                 :multiple="false"
+                :on-success="handleGameSuccess"
               >
                 <i class="el-icon-upload" />
                 <div class="el-upload__text">将图片拖到此处，或<em>点击上传</em></div>
@@ -124,6 +132,7 @@
             size="mini"
             round
             type="success"
+            @click="uploadGame"
           ><i class="el-icon-check">上传游戏</i></el-button>
         </div>
       </el-tab-pane>
@@ -138,11 +147,13 @@
             </el-form-item>
             <el-form-item label="歌曲封面">
               <el-upload
+                ref="musicCoverRef"
                 class="upload-demo"
                 drag
                 name="file"
-                action="https://jsonplaceholder.typicode.com/posts/"
+                action="http://127.0.0.1:8081/oss/uploadMusicCover"
                 :multiple="false"
+                :on-success="handleMusicCoverSuccess"
               >
                 <i class="el-icon-upload" />
                 <div class="el-upload__text">将图片拖到此处，或<em>点击上传</em></div>
@@ -150,11 +161,13 @@
             </el-form-item>
             <el-form-item label="歌曲文件">
               <el-upload
+                ref="musicRef"
                 class="upload-demo"
                 drag
-                name="file"
-                action="https://jsonplaceholder.typicode.com/posts/"
+                name="files"
+                action="http://127.0.0.1:8081/oss/uploadMusic"
                 :multiple="false"
+                :on-success="handleMusicSuccess"
               >
                 <i class="el-icon-upload" />
                 <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -169,6 +182,7 @@
             size="mini"
             round
             type="success"
+            @click="uploadMusic"
           ><i class="el-icon-check">上传音频</i></el-button>
         </div>
       </el-tab-pane>
@@ -180,11 +194,13 @@
             </el-form-item>
             <el-form-item label="视频文件">
               <el-upload
+                ref="videoRef"
                 class="upload-demo"
                 drag
                 name="file"
-                action="https://jsonplaceholder.typicode.com/posts/"
+                action="http://127.0.0.1:8081/oss/uploadVideo"
                 :multiple="false"
+                :on-success="handleVideoSuccess"
               >
                 <i class="el-icon-upload" />
                 <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -199,6 +215,7 @@
             size="mini"
             round
             type="success"
+            @click="uploadVideo"
           ><i class="el-icon-check">上传视频</i></el-button>
         </div>
       </el-tab-pane>
@@ -225,7 +242,8 @@ export default {
       articleForm: {
         title: '',
         content: '',
-        articleCover: ''
+        articleCover: '',
+        authorId: '111'
       },
       articleFormRules: {
         title: [
@@ -248,9 +266,10 @@ export default {
         ]
       },
 
-      wallpaerForm: {
+      wallpaperForm: {
         title: '',
-        ossSrc: ''
+        ossSrc: '',
+        authorId: '111'
       },
       wallpaperFormRules: {
         title: [
@@ -268,9 +287,11 @@ export default {
       gameForm: {
         gameName: '',
         description: '',
+        gameCover: '',
         bdSrc: '',
         bdCode: '',
-        dCode: ''
+        dCode: '',
+        authorId: '111'
       },
       gameFormRules: {
         gameName: [
@@ -323,7 +344,9 @@ export default {
       musicForm: {
         singer: '',
         song: '',
-        ossSrc: ''
+        ossSrc: '',
+        musicCover: '',
+        authorId: '111'
       },
       musicFormRules: {
         singer: [
@@ -347,7 +370,8 @@ export default {
       },
       videoForm: {
         videoName: '',
-        ossSrc: ''
+        ossSrc: '',
+        authorId: '111'
       },
       videoFormRules: {
         videoName: [
@@ -359,13 +383,74 @@ export default {
             trigger: 'blur'
           }
         ]
-      },
-
-      authorId: ''
+      }
     }
   },
   methods: {
-
+    handleArticleSuccess(responese) {
+      this.articleForm.articleCover = responese.data
+    },
+    async uploadArticle() {
+      const { data: res } = await this.$http.post(`/article/addArticle`, this.articleForm)
+      if (res.statue !== 200) {
+        return this.$message.error('上传失败')
+      }
+      this.$refs.articleFormRef.resetFields()
+      this.$refs.articleRef.clearFiles()
+      return this.$message.success('上传成功')
+    },
+    handleWallpaperSuccess(responese) {
+      this.wallpaperForm.ossSrc = responese.data
+    },
+    async uploadWallpaper() {
+      const { data: res } = await this.$http.post(`/wallpaper/addWallpaper`, this.wallpaperForm)
+      if (res.statue !== 200) {
+        return this.$message.error('上传失败')
+      }
+      this.$refs.wallpaperFormRef.resetFields()
+      this.$refs.wallpaperRef.clearFiles()
+      return this.$message.success('上传成功')
+    },
+    handleGameSuccess(responese) {
+      this.gameForm.gameCover = responese.data
+    },
+    async uploadGame() {
+      const { data: res } = await this.$http.post(`/game/addGame`, this.gameForm)
+      if (res.statue !== 200) {
+        return this.$message.error('上传失败')
+      }
+      this.$refs.gameFormRef.resetFields()
+      this.$refs.gameRef.clearFiles()
+      return this.$message.success('上传成功')
+    },
+    handleMusicSuccess(responese) {
+      this.musicForm.ossSrc = responese.data
+    },
+    handleMusicCoverSuccess(responese) {
+      this.musicForm.musicCover = responese.data
+    },
+    async uploadMusic() {
+      const { data: res } = await this.$http.post(`/music/addMusic`, this.musicForm)
+      if (res.statue !== 200) {
+        return this.$message.error('上传失败')
+      }
+      this.$refs.musicFormRef.resetFields()
+      this.$refs.musicRef.clearFiles()
+      this.$refs.musicCoverRef.clearFiles()
+      return this.$message.success('上传成功')
+    },
+    handleVideoSuccess(responese) {
+      this.videoForm.ossSrc = responese.data
+    },
+    async uploadVideo() {
+      const { data: res } = await this.$http.post(`/video/addVideo`, this.videoForm)
+      if (res.statue !== 200) {
+        return this.$message.error('上传失败')
+      }
+      this.$refs.videoFormRef.resetFields()
+      this.$refs.videoRef.clearFiles()
+      return this.$message.success('上传成功')
+    }
   }
 
 }

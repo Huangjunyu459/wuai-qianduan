@@ -38,7 +38,6 @@
         <el-table-column label="序号" type="index" />
         <el-table-column label="id" prop="id" />
         <el-table-column label="壁纸标题" prop="title" />
-        <el-table-column label="oss标题" prop="ossTitle" />
         <el-table-column label="阿里云地址" prop="ossSrc" />
         <el-table-column label="上传的作者id" prop="authorId" />
         <el-table-column label="所属分类" prop="categoryId">
@@ -113,9 +112,6 @@
         <el-form-item label="壁纸标题" prop="title">
           <el-input v-model="addForm.title" />
         </el-form-item>
-        <el-form-item label="oos标题" prop="ossTitle">
-          <el-input v-model="addForm.ossTitle" />
-        </el-form-item>
         <el-form-item label="阿里云地址" prop="ossSrc">
           <el-input v-model="addForm.ossSrc" />
         </el-form-item>
@@ -145,9 +141,6 @@
       >
         <el-form-item label="壁纸标题" prop="title">
           <el-input v-model="editForm.title" />
-        </el-form-item>
-        <el-form-item label="oos标题" prop="ossTitle">
-          <el-input v-model="editForm.ossTitle" />
         </el-form-item>
         <el-form-item label="阿里云地址" prop="ossSrc">
           <el-input v-model="editForm.ossSrc" />
@@ -196,7 +189,6 @@ export default {
       //    添加壁纸的表单数据
       addForm: {
         title: '',
-        ossTitle: '',
         ossSrc: '',
         authorId: '',
         categoryId: '',
@@ -210,15 +202,6 @@ export default {
             min: 1,
             max: 50,
             message: '长度在 1 到 50 个字符',
-            trigger: 'blur'
-          }
-        ],
-        ossTitle: [
-          { required: true, message: '请输入oosTitle', trigger: 'blur' },
-          {
-            min: 1,
-            max: 100,
-            message: '长度在 1 到 100 个字符',
             trigger: 'blur'
           }
         ],
@@ -253,7 +236,6 @@ export default {
       editForm: {
         id: '',
         title: '',
-        ossTitle: '',
         ossSrc: '',
         authorId: '',
         love: 0
@@ -276,15 +258,6 @@ export default {
             min: 1,
             max: 50,
             message: '长度在 1 到 50 个字符',
-            trigger: 'blur'
-          }
-        ],
-        ossTitle: [
-          { required: true, message: '请输入oosTitle', trigger: 'blur' },
-          {
-            min: 1,
-            max: 100,
-            message: '长度在 1 到 100 个字符',
             trigger: 'blur'
           }
         ],

@@ -32,7 +32,6 @@
         <el-table-column label="序号" type="index" />
         <el-table-column label="视频id" prop="id" />
         <el-table-column label="视频名" prop="videoName" />
-        <el-table-column label="oss视频名" prop="ossName" />
         <el-table-column label="阿里云地址" prop="ossSrc" />
         <el-table-column label="上传的作者id" prop="authorId" />
         <el-table-column label="所属分类" prop="categoryId">
@@ -161,7 +160,6 @@ export default {
       const { data: res } = await this.$http.get(
         `/video/pagingQueryNoExamine?videoName=${this.queryInfo.query}&index=${this.queryInfo.index}&size=${this.queryInfo.size}`
       )
-      console.log(res)
       if (res.statue !== 200) {
         return this.$message.error('获取视频列表失败')
       }

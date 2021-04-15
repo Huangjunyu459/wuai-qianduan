@@ -32,7 +32,6 @@
         <el-table-column label="序号" type="index" />
         <el-table-column label="id" prop="id" />
         <el-table-column label="壁纸标题" prop="title" />
-        <el-table-column label="oss标题" prop="ossTitle" />
         <el-table-column label="阿里云地址" prop="ossSrc" />
         <el-table-column label="上传的作者id" prop="authorId" />
         <el-table-column label="所属分类" prop="categoryId">
@@ -120,9 +119,6 @@
         <el-form-item label="壁纸标题" prop="title">
           <el-input v-model="editForm.title" />
         </el-form-item>
-        <el-form-item label="oos标题" prop="ossTitle">
-          <el-input v-model="editForm.ossTitle" />
-        </el-form-item>
         <el-form-item label="壁纸预览">
           <img :alt="editForm.title" :src="editForm.ossSrc" height="200px" width="200px">
           <!-- <el-input v-model="editForm.ossSrc" /> -->
@@ -168,7 +164,6 @@ export default {
       editForm: {
         id: '',
         title: '',
-        ossTitle: '',
         ossSrc: '',
         authorId: '',
         love: 0
@@ -187,15 +182,6 @@ export default {
         ],
         title: [
           { required: true, message: '请输入壁纸名称', trigger: 'blur' },
-          {
-            min: 1,
-            max: 100,
-            message: '长度在 1 到 100 个字符',
-            trigger: 'blur'
-          }
-        ],
-        ossTitle: [
-          { required: true, message: '请输入oosTitle', trigger: 'blur' },
           {
             min: 1,
             max: 100,
