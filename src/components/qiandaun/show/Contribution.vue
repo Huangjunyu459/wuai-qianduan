@@ -39,6 +39,9 @@
                 <div class="el-upload__text">将图片拖到此处，或<em>点击上传</em></div>
               </el-upload>
             </el-form-item>
+            <el-form-item label="会员专属" prop="isVip">
+              <el-switch v-model="articleForm.isVip" />
+            </el-form-item>
             <el-form-item hidden label="作者id">
               <el-input v-model="authorId" />
             </el-form-item>
@@ -71,6 +74,9 @@
                 <i class="el-icon-upload" />
                 <div class="el-upload__text">将图片拖到此处，或<em>点击上传</em></div>
               </el-upload>
+            </el-form-item>
+            <el-form-item label="会员专属" prop="isVip">
+              <el-switch v-model="wallpaperForm.isVip" />
             </el-form-item>
             <el-form-item hidden label="作者id">
               <el-input v-model="authorId" />
@@ -123,6 +129,9 @@
             <el-form-item label="解压码" prop="dCode">
               <el-input v-model="gameForm.dCode" />
             </el-form-item>
+            <el-form-item label="会员专属" prop="isVip">
+              <el-switch v-model="gameForm.isVip" />
+            </el-form-item>
             <el-form-item hidden label="作者id">
               <el-input v-model="authorId" />
             </el-form-item>
@@ -173,6 +182,9 @@
                 <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
               </el-upload>
             </el-form-item>
+            <el-form-item label="会员专属" prop="isVip">
+              <el-switch v-model="musicForm.isVip" />
+            </el-form-item>
             <el-form-item hidden label="作者id">
               <el-input v-model="authorId" />
             </el-form-item>
@@ -206,6 +218,9 @@
                 <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
               </el-upload>
             </el-form-item>
+            <el-form-item label="会员专属" prop="isVip">
+              <el-switch v-model="videoForm.isVip" />
+            </el-form-item>
             <el-form-item hidden label="作者id">
               <el-input v-model="authorId" />
             </el-form-item>
@@ -225,6 +240,7 @@
 
 <script>
 export default {
+  inject: ['reload'],
   data() {
     //  提取码验证规则
     var checckCode = (rule, value, cb) => {
@@ -238,12 +254,12 @@ export default {
       cb(new Error('提取码只能是数字或英文'))
     }
     return {
-
       articleForm: {
         title: '',
         content: '',
         articleCover: '',
-        authorId: '111'
+        authorId: '',
+        isVip: false
       },
       articleFormRules: {
         title: [
@@ -269,7 +285,8 @@ export default {
       wallpaperForm: {
         title: '',
         ossSrc: '',
-        authorId: '111'
+        authorId: '',
+        isVip: false
       },
       wallpaperFormRules: {
         title: [
@@ -291,7 +308,8 @@ export default {
         bdSrc: '',
         bdCode: '',
         dCode: '',
-        authorId: '111'
+        authorId: '',
+        isVip: false
       },
       gameFormRules: {
         gameName: [
@@ -346,7 +364,8 @@ export default {
         song: '',
         ossSrc: '',
         musicCover: '',
-        authorId: '111'
+        authorId: '',
+        isVip: false
       },
       musicFormRules: {
         singer: [
@@ -371,7 +390,8 @@ export default {
       videoForm: {
         videoName: '',
         ossSrc: '',
-        authorId: '111'
+        authorId: '',
+        isVip: false
       },
       videoFormRules: {
         videoName: [
@@ -386,7 +406,17 @@ export default {
       }
     }
   },
+  created() {
+    this.fuzhi()
+  },
   methods: {
+    fuzhi() {
+      this.articleForm.authorId = this.$cookies.get('user').id
+      this.wallpaperForm.authorId = this.$cookies.get('user').id
+      this.gameForm.authorId = this.$cookies.get('user').id
+      this.musicForm.authorId = this.$cookies.get('user').id
+      this.videoForm.authorId = this.$cookies.get('user').id
+    },
     handleArticleSuccess(responese) {
       this.articleForm.articleCover = responese.data
     },
@@ -397,6 +427,7 @@ export default {
       }
       this.$refs.articleFormRef.resetFields()
       this.$refs.articleRef.clearFiles()
+      this.reload()
       return this.$message.success('上传成功')
     },
     handleWallpaperSuccess(responese) {
@@ -409,6 +440,7 @@ export default {
       }
       this.$refs.wallpaperFormRef.resetFields()
       this.$refs.wallpaperRef.clearFiles()
+      this.reload()
       return this.$message.success('上传成功')
     },
     handleGameSuccess(responese) {
@@ -421,6 +453,7 @@ export default {
       }
       this.$refs.gameFormRef.resetFields()
       this.$refs.gameRef.clearFiles()
+      this.reload()
       return this.$message.success('上传成功')
     },
     handleMusicSuccess(responese) {
@@ -437,6 +470,7 @@ export default {
       this.$refs.musicFormRef.resetFields()
       this.$refs.musicRef.clearFiles()
       this.$refs.musicCoverRef.clearFiles()
+      this.reload()
       return this.$message.success('上传成功')
     },
     handleVideoSuccess(responese) {
@@ -449,6 +483,7 @@ export default {
       }
       this.$refs.videoFormRef.resetFields()
       this.$refs.videoRef.clearFiles()
+      this.reload()
       return this.$message.success('上传成功')
     }
   }

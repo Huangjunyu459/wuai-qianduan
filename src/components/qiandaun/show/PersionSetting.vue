@@ -5,16 +5,17 @@
     <div class="avator-form">
       <div class="avator">
         <img
-          src="https://2021article.oss-cn-hangzhou.aliyuncs.com/pic/ae2483538378479f84c66a6a89384e5c_%E9%BB%98%E8%AE%A4%E5%A4%B4%E5%83%8F.jpg"
-          alt=""
+          :src="editForm.avatar"
+          alt="加载失败"
         >
       </div>
       <div class="upload">
         <el-upload
           class="upload-demo"
           drag
-          action="https://jsonplaceholder.typicode.com/posts/"
+          action="http://127.0.0.1:8081/oss/uploadPic"
           multiple
+          on-success="hanldeSuccess"
         >
           <i class="el-icon-upload" />
           <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -31,7 +32,7 @@
         label-width="70px"
       >
         <el-form-item label="昵称" prop="username">
-          <el-input v-model="editForm.username" />
+          <el-input v-model="editForm.username" @blur="checkUser(editForm.username)" />
         </el-form-item>
         <el-form-item label="描述" prop="sign">
           <el-input
@@ -62,6 +63,7 @@
 
 <script>
 export default {
+  inject: ['reload'],
   data() {
     //    邮箱验证规则
     var checkEmail = (rule, value, cb) => {
@@ -89,9 +91,11 @@ export default {
     return {
       //    查询到的用户信息保存对象
       editForm: {
+        avatar: '',
         username: '',
         password: '',
-        email: ''
+        email: '',
+        sign: ''
       },
       //    修改表单的验证规则对象
       editFormRules: {
@@ -141,8 +145,27 @@ export default {
   methods: {
     async getUser(id) {
       const { data: res } = await this.$http.get(`/user/findUserById?id=${id}`)
-      console.log(res)
       this.editForm = res.data.user
+      this.editForm.avatar = this.$cookies.get('user').avatar
+      console.log(this.$cookies.get('user').avatar)
+    },
+    hanldeSuccess(responese) {
+      this.editForm.avatar = responese.data
+    },
+    async editUserInfo() {
+      const { data: res } = await this.$http.post(`/user/updateUser`, this.editForm)
+      if (res.statue !== 200) {
+        return this.$message.error('更新失败')
+      }
+      this.reload()
+      return this.$message.success('更新成功')
+    },
+    async checkUser(username) {
+      const { data: res } = await this.$http.get(`/user/findUserByUsername?username=${username}`)
+      if (res.statue === 200 && res.data.user !== null) {
+        return this.$message.error('已存在该用户名')
+      }
+      return this.$message.success('可以使用该用户名')
     }
   }
 }

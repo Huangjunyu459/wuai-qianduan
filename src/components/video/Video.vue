@@ -47,6 +47,12 @@
           </template>
         </el-table-column>
         <el-table-column label="点赞数" prop="love" />
+        <el-table-column label="会员专属" prop="isVip">
+          <template slot-scope="{ row }">
+            <div v-show="row.isVip === false">非会员</div>
+            <div v-show="row.isVip === true">会员</div>
+          </template>
+        </el-table-column>
         <el-table-column label="创建时间" prop="createTime" />
         <el-table-column label="修改时间" prop="updateTime" />
         <el-table-column label="操作" width="250px">
@@ -122,6 +128,9 @@
         <el-form-item label="作者id" prop="authorId">
           <el-input v-model="addForm.authorId" />
         </el-form-item>
+        <el-form-item label="会员专属" prop="isVip">
+          <el-switch v-model="addForm.isVip" />
+        </el-form-item>
       </el-form>
       <!-- 底部区域 -->
       <span slot="footer" class="dialog-footer">
@@ -151,6 +160,9 @@
         </el-form-item>
         <el-form-item label="点赞数" prop="love">
           <el-input v-model="editForm.love" />
+        </el-form-item>
+        <el-form-item label="会员专属" prop="isVip">
+          <el-switch v-model="editForm.isVip" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -193,7 +205,8 @@ export default {
       addForm: {
         videoName: '',
         ossSrc: '',
-        authorId: ''
+        authorId: '',
+        isVip: false
       },
       //    添加表单的验证规则对象
       addFormRules: {
@@ -232,7 +245,8 @@ export default {
       editForm: {
         videoName: '',
         ossSrc: '',
-        love: 0
+        love: 0,
+        isVip: false
       },
       //    修改表单的验证规则对象
       editFormRules: {
@@ -355,8 +369,8 @@ export default {
         this.$message.success('修改视频成功')
         //  隐藏修改视频的对话框
         this.editDialogVisivle = false
-        //  功能有bug 重新获取视频数据 this.pagingQueryExamine()
-        this.getVideoList()
+        //  重新获取游戏数据
+        this.pagingQueryExamine()
       })
     },
     //    根据 id 删除对应的视频

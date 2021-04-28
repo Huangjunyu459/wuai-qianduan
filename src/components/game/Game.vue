@@ -41,13 +41,19 @@
         <el-table-column label="游戏描述" prop="description" />
         <el-table-column label="百度云盘" prop="bdSrc" />
         <el-table-column label="提取码" prop="bdCode" />
-        <el-table-column label="上传的作者id" prop="authorID" />
+        <el-table-column label="上传的作者id" prop="authorId" />
         <el-table-column label="所属分类" prop="categoryId">
           <template slot-scope="{ row }">
             <div v-show="row.categoryId === 2">游戏</div>
           </template>
         </el-table-column>
         <el-table-column label="点赞数" prop="love" />
+        <el-table-column label="会员专属" prop="isVip">
+          <template slot-scope="{ row }">
+            <div v-show="row.isVip === false">非会员</div>
+            <div v-show="row.isVip === true">会员</div>
+          </template>
+        </el-table-column>
         <el-table-column label="创建时间" prop="createTime" />
         <el-table-column label="修改时间" prop="updateTime" />
         <el-table-column label="操作" width="250px">
@@ -129,6 +135,9 @@
         <el-form-item label="作者id" prop="authorId">
           <el-input v-model="addForm.authorId" />
         </el-form-item>
+        <el-form-item label="会员专属" prop="isVip">
+          <el-switch v-model="addForm.isVip" />
+        </el-form-item>
       </el-form>
       <!-- 底部区域 -->
       <span slot="footer" class="dialog-footer">
@@ -167,6 +176,9 @@
         </el-form-item>
         <el-form-item label="解压码">
           <el-input v-model="editForm.dCode" />
+        </el-form-item>
+        <el-form-item label="会员专属" prop="isVip">
+          <el-switch v-model="editForm.isVip" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -228,7 +240,8 @@ export default {
         dCode: '',
         authorId: '',
         categoryId: '',
-        love: 0
+        love: 0,
+        isVip: false
       },
       //    添加表单的验证规则对象
       addFormRules: {
@@ -323,7 +336,8 @@ export default {
         dCode: '',
         authorId: '',
         categoryId: '',
-        love: 0
+        love: 0,
+        isVip: false
       },
       //    修改表单的验证规则对象
       editFormRules: {
@@ -418,12 +432,12 @@ export default {
       }
       this.gameList = res.data.gameList
       this.total = res.data.gameList.length
+      console.log(this.gameList)
     },
     async pagingQueryExamine() {
       const { data: res } = await this.$http.get(
         `/game/pagingQueryExamine?gameName=${this.queryInfo.query}&index=${this.queryInfo.index}&size=${this.queryInfo.size}`
       )
-      console.log(res)
       if (res.statue !== 200) {
         return this.$message.error('获取游戏列表失败')
       }

@@ -61,6 +61,8 @@ import FindWallpapers from '../components/qiandaun/finds/FindWallpapers.vue'
 import FindGames from '../components/qiandaun/finds/FindGames.vue'
 import FindMuiscs from '../components/qiandaun/finds/FindMusics.vue'
 import FindVideos from '../components/qiandaun/finds/FindVideos.vue'
+import Vip from '../components/qiandaun/show/Vip.vue'
+import Recharge from '../components/qiandaun/show/recharge.vue'
 
 Vue.use(VueRouter)
 
@@ -188,6 +190,10 @@ const routes = [
         component: Main
       },
       {
+        path: '/vip',
+        component: Vip
+      },
+      {
         path: '/wallpaper',
         component: ShowWallpaper
       },
@@ -282,6 +288,10 @@ const routes = [
       {
         path: '/contribution',
         component: Contribution
+      },
+      {
+        path: '/recharge',
+        component: Recharge
       }
     ]
 

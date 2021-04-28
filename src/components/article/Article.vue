@@ -50,7 +50,7 @@
           </template>
         </el-table-column>
         <el-table-column label="封面连接" prop="articleCover" />
-        <el-table-column label="上传的作者id" prop="authorID" />
+        <el-table-column label="上传的作者id" prop="authorId" />
         <el-table-column label="所属分类" prop="categoryId">
           <template slot-scope="{ row }">
             <div v-show="row.categoryId === 5">文章</div>
@@ -59,6 +59,12 @@
         <el-table-column label="点赞数" prop="love" />
         <!-- <el-table-column label="创建时间" prop="createTime" />
         <el-table-column label="修改时间" prop="updateTime" /> -->
+        <el-table-column label="会员专属" prop="isVip">
+          <template slot-scope="{ row }">
+            <div v-show="row.isVip === false">非会员</div>
+            <div v-show="row.isVip === true">会员</div>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="250px">
           <template slot-scope="{ row }">
             <!-- 按钮提示 -->
@@ -132,6 +138,9 @@
         <el-form-item label="作者id" prop="authorId">
           <el-input v-model="addForm.authorId" />
         </el-form-item>
+        <el-form-item label="会员专属" prop="isVip">
+          <el-switch v-model="addForm.isVip" />
+        </el-form-item>
       </el-form>
       <!-- 底部区域 -->
       <span slot="footer" class="dialog-footer">
@@ -164,6 +173,9 @@
         </el-form-item>
         <el-form-item label="点赞数" prop="love">
           <el-input v-model="editForm.love" />
+        </el-form-item>
+        <el-form-item label="会员专属" prop="isVip">
+          <el-switch v-model="editForm.isVip" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -208,7 +220,8 @@ export default {
         title: '',
         content: '',
         articleCover: '',
-        authorId: ''
+        authorId: '',
+        isVip: false
       },
       //    添加表单的验证规则对象
       addFormRules: {
@@ -257,7 +270,8 @@ export default {
         title: '',
         content: '',
         articleCover: '',
-        love: 0
+        love: 0,
+        isVip: false
       },
       //    修改表单的验证规则对象
       editFormRules: {

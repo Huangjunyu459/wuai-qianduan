@@ -41,6 +41,12 @@
           </template>
         </el-table-column>
         <el-table-column label="点赞数" prop="love" />
+        <el-table-column label="会员专属" prop="isVip">
+          <template slot-scope="{ row }">
+            <div v-show="row.isVip === false">非会员</div>
+            <div v-show="row.isVip === true">会员</div>
+          </template>
+        </el-table-column>
         <el-table-column label="创建时间" prop="createTime" />
         <el-table-column label="修改时间" prop="updateTime" />
         <el-table-column label="操作" width="300px">

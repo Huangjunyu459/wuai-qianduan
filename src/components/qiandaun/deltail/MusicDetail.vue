@@ -49,6 +49,40 @@
     </div>
 
     <!-- 评论区域 -->
+    <el-dialog
+      title="评论区"
+      :visible.sync="dialogVisible"
+      width="40%"
+      :before-close="handleClose"
+    >
+
+      <el-form ref="commentFormRef" label-width="100px" class="demo-ruleForm" :model="commentForm" :rules="commentFormRules">
+        <el-form-item label="评论内容" prop="content">
+          <el-input
+            v-model="commentForm.content"
+            type="textarea"
+            :autosize="{ minRows: 4, maxRows: 6}"
+            maxlength="300"
+            show-word-limit
+          />
+        </el-form-item>
+        <el-form-item hidden label="作品id">
+          <el-input v-model="commentForm.articleId" />
+        </el-form-item>
+        <el-form-item hidden label="用户id">
+          <el-input v-model="commentForm.userId" />
+        </el-form-item>
+        <el-form-item hidden label="用户名称">
+          <el-input v-model="commentForm.userName" />
+        </el-form-item>
+      </el-form>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="commit">提交</el-button>
+      </span>
+    </el-dialog>
+
+    <!-- 评论区域 -->
     <div class="comment">
       <div class="joinComment">
         <el-button
@@ -56,30 +90,20 @@
           class="commentBtn"
           round
           type="danger"
+          @click="showComment"
         >参与评论聊一聊</el-button>
       </div>
       <div class="showComment">
         <i class="el-icon-chat-line-round">最新评论</i>
-        <div class="user_comment">
+        <div v-for="comment in commentList" :key="comment" class="user_comment">
           <div class="user_avator">
             <img
               src="https://2021article.oss-cn-hangzhou.aliyuncs.com/pic/ae2483538378479f84c66a6a89384e5c_%E9%BB%98%E8%AE%A4%E5%A4%B4%E5%83%8F.jpg"
-              alt="avator"
+              alt="用户头像"
             >
           </div>
-          <span>用户名</span>
-          <p>用户评论</p>
-        </div>
-
-        <div class="user_comment">
-          <div class="user_avator">
-            <img
-              src="https://2021article.oss-cn-hangzhou.aliyuncs.com/pic/ae2483538378479f84c66a6a89384e5c_%E9%BB%98%E8%AE%A4%E5%A4%B4%E5%83%8F.jpg"
-              alt="avator"
-            >
-          </div>
-          <span>用户名</span>
-          <p>用户评论</p>
+          <span>{{ comment.userName }}</span>
+          <p>{{ comment.content }}</p>
         </div>
       </div>
     </div>
@@ -90,19 +114,34 @@
 export default {
   data() {
     return {
-      music: ''
+      music: '',
+      dialogVisible: false,
+      commentForm: {
+        articleId: '',
+        userId: '',
+        userName: '',
+        content: ''
+      },
+      commentList: []
     }
   },
   created() {
     this.getMusic(this.$route.query.id)
+    this.getComment(this.$route.query.id)
+    this.fuzhi()
   },
   methods: {
+    fuzhi() {
+      this.commentForm.userId = this.$cookies.get('user').id
+      this.commentForm.userName = this.$cookies.get('user').username
+    },
     async getMusic(id) {
       const { data: res } = await this.$http.get(`/music/getById?id=${id}`)
       if (res.statue !== 200) {
         return this.$message.error('获取音乐失败')
       }
       this.music = res.data.music
+      this.commentForm.articleId = res.data.music.id
     },
     async  likes(id) {
       const { data: res } = await this.$http.get(`/music/likes?id=${id}`)
@@ -114,6 +153,30 @@ export default {
         message: '点赞成功',
         type: 'success'
       })
+    },
+    async getComment(id) {
+      const { data: res } = await this.$http.get(`/comment/findFiveCommentExamine?id=${id}`)
+      console.log(id)
+      if (res.statue !== 200) {
+        return this.$message.error('获取评论失败')
+      }
+      this.commentList = res.data.commentList
+      console.log(this.commentList)
+    },
+    showComment() {
+      this.dialogVisible = true
+    },
+    async commit() {
+      const { data: res } = await this.$http.post(`/comment/addComment`, this.commentForm)
+      if (res.statue !== 200) {
+        return this.$message.error('评论失败')
+      }
+      this.$refs.commentFormRef.resetFields()
+      this.dialogVisible = false
+      return this.$message.success('评论成功')
+    },
+    handleClose(done) {
+      this.dialogVisible = false
     }
   }
 

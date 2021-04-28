@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
+import VueCookies from 'vue-cookies'
+Vue.use(VueCookies)
 import './plugins/element.js'
 
 // 导入字体图表

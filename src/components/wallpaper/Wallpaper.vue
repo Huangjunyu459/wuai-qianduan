@@ -46,6 +46,12 @@
           </template>
         </el-table-column>
         <el-table-column label="点赞数" prop="love" />
+        <el-table-column label="会员专属" prop="isVip">
+          <template slot-scope="{ row }">
+            <div v-show="row.isVip === false">非会员</div>
+            <div v-show="row.isVip === true">会员</div>
+          </template>
+        </el-table-column>
         <el-table-column label="创建时间" prop="createTime" />
         <el-table-column label="修改时间" prop="updateTime" />
         <el-table-column label="操作" width="250px">
@@ -118,6 +124,9 @@
         <el-form-item label="作者id" prop="authorId">
           <el-input v-model="addForm.authorId" />
         </el-form-item>
+        <el-form-item label="会员专属" prop="isVip">
+          <el-switch v-model="addForm.isVip" />
+        </el-form-item>
       </el-form>
       <!-- 底部区域 -->
       <span slot="footer" class="dialog-footer">
@@ -147,6 +156,9 @@
         </el-form-item>
         <el-form-item label="点赞数" prop="love">
           <el-input v-model="editForm.love" />
+        </el-form-item>
+        <el-form-item label="会员专属" prop="isVip">
+          <el-switch v-model="editForm.isVip" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -192,7 +204,8 @@ export default {
         ossSrc: '',
         authorId: '',
         categoryId: '',
-        love: 0
+        love: 0,
+        isVip: false
       },
       //    添加表单的验证规则对象
       addFormRules: {
@@ -238,7 +251,8 @@ export default {
         title: '',
         ossSrc: '',
         authorId: '',
-        love: 0
+        love: 0,
+        isVip: false
       },
       //    修改表单的验证规则对象
       editFormRules: {
@@ -351,8 +365,8 @@ export default {
         this.$message.success('添加壁纸成功')
         //  隐藏添加壁纸的对话框
         this.addDialogVisible = false
-        //  分页功能有bug this.pagingQueryExamine()
-        this.getWallpaperList()
+        //  重新获取游戏数据
+        this.pagingQueryExamine()
       })
     },
     //  展示编辑壁纸的对话框

@@ -80,6 +80,12 @@
           文章管理<br>
           <el-link
             :underline="false"
+            @click="recharge(user.id)"
+          ><i
+            class="el-icon-finished"
+          >充值会员</i></el-link><br>
+          <el-link
+            :underline="false"
             @click="$router.push('/contribution')"
           ><i class="el-icon-edit">up投稿</i></el-link><br>
           <el-link
@@ -212,6 +218,7 @@
 <script>
 import navigation from '../../assets/js/navigation'
 export default {
+  inject: ['reload'],
   data() {
     //    邮箱验证规则
     var checkEmail = (rule, value, cb) => {
@@ -314,7 +321,7 @@ export default {
     }
   },
   created() {
-
+    this.checkLogin()
   },
   methods: {
     async getUser(email) {
@@ -322,7 +329,8 @@ export default {
       if (res.statue !== 200) {
         return this.$message.error('获取用户失败')
       }
-      this.user = res.data.user
+      this.$cookies.set('user', res.data.user)
+      this.user = this.$cookies.get('user')
     },
     showUserInfo() {
       this.userInfo = true
@@ -344,12 +352,21 @@ export default {
       if (res.statue !== 200) {
         return this.$message.error('签到失败')
       }
+      this.findUserById(id)
       return this.$message.success('签到成功')
+    },
+    async findUserById(id) {
+      const { data: res } = await this.$http.get(`/user/findUserById?id=${id}`)
+      if (res.statue === 200) {
+        this.$cookies.set('user', res.data.user)
+        this.user = this.$cookies.get('user')
+      }
     },
     //    退出功能
     logout: function() {
-      window.sessionStorage.clear()
-      this.$router.push('/index')
+      this.$cookies.remove('user')
+      this.$router.push('/main')
+      this.reload()
     },
     showPersonInfo(id) {
       this.$router.push(`/personInfo?id=${id}`)
@@ -389,6 +406,15 @@ export default {
       this.$refs.registerFormRef.resetFields()
       this.loginFormVisible = false
       return this.$message.success('注册成功')
+    },
+    checkLogin() {
+      if (this.$cookies.get('user') !== null) {
+        this.user = this.$cookies.get('user')
+        this.islogin = true
+      }
+    },
+    recharge(id) {
+      this.$router.push(`/recharge?id=${id}`)
     }
   }
 }

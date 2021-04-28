@@ -5,15 +5,15 @@
       <el-breadcrumb-item :to="{ path: '/index' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item :to="{ path: '/video' }">视频 </el-breadcrumb-item>
       <el-breadcrumb-item>视频详情 </el-breadcrumb-item>
-      <el-breadcrumb-item>视频名 </el-breadcrumb-item>
+      <el-breadcrumb-item>{{ video.videoName }} </el-breadcrumb-item>
     </el-breadcrumb>
 
-    <!-- 壁纸展示区域 -->
+    <!-- 视频展示区域 -->
     <div class="showbox">
       <div class="video">
         <video
           class="myvideo"
-          src="https://2021article.oss-cn-hangzhou.aliyuncs.com/video/c6886c7117de4ea38102393b717de17e_%E7%8C%AB%E7%8C%AB%E6%95%99%E4%BD%A0%E6%97%A9%E4%B8%8A%E5%A6%82%E4%BD%95%E5%BF%AB%E9%80%9F%E6%B8%85%E9%86%92.mp4"
+          :src="video.ossSrc"
           controls="controls"
         />
       </div>
@@ -24,7 +24,8 @@
           round
           icon="el-icon-star-off"
           type="danger"
-        >点赞</el-button>
+          @click="likes(video.id)"
+        >点赞   {{ video.love }}</el-button>
         <el-button
           class="mybtn"
           round
@@ -42,6 +43,40 @@
     </div>
 
     <!-- 评论区域 -->
+    <el-dialog
+      title="评论区"
+      :visible.sync="dialogVisible"
+      width="40%"
+      :before-close="handleClose"
+    >
+
+      <el-form ref="commentFormRef" label-width="100px" class="demo-ruleForm" :model="commentForm" :rules="commentFormRules">
+        <el-form-item label="评论内容" prop="content">
+          <el-input
+            v-model="commentForm.content"
+            type="textarea"
+            :autosize="{ minRows: 4, maxRows: 6}"
+            maxlength="300"
+            show-word-limit
+          />
+        </el-form-item>
+        <el-form-item hidden label="作品id">
+          <el-input v-model="commentForm.articleId" />
+        </el-form-item>
+        <el-form-item hidden label="用户id">
+          <el-input v-model="commentForm.userId" />
+        </el-form-item>
+        <el-form-item hidden label="用户名称">
+          <el-input v-model="commentForm.userName" />
+        </el-form-item>
+      </el-form>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="commit">提交</el-button>
+      </span>
+    </el-dialog>
+
+    <!-- 评论区域 -->
     <div class="comment">
       <div class="joinComment">
         <el-button
@@ -49,30 +84,20 @@
           class="commentBtn"
           round
           type="danger"
+          @click="showComment"
         >参与评论聊一聊</el-button>
       </div>
       <div class="showComment">
         <i class="el-icon-chat-line-round">最新评论</i>
-        <div class="user_comment">
+        <div v-for="comment in commentList" :key="comment" class="user_comment">
           <div class="user_avator">
             <img
               src="https://2021article.oss-cn-hangzhou.aliyuncs.com/pic/ae2483538378479f84c66a6a89384e5c_%E9%BB%98%E8%AE%A4%E5%A4%B4%E5%83%8F.jpg"
-              alt="avator"
+              alt="用户头像"
             >
           </div>
-          <span>用户名</span>
-          <p>用户评论</p>
-        </div>
-
-        <div class="user_comment">
-          <div class="user_avator">
-            <img
-              src="https://2021article.oss-cn-hangzhou.aliyuncs.com/pic/ae2483538378479f84c66a6a89384e5c_%E9%BB%98%E8%AE%A4%E5%A4%B4%E5%83%8F.jpg"
-              alt="avator"
-            >
-          </div>
-          <span>用户名</span>
-          <p>用户评论</p>
+          <span>{{ comment.userName }}</span>
+          <p>{{ comment.content }}</p>
         </div>
       </div>
     </div>
@@ -80,8 +105,74 @@
 </template>
 
 <script>
-import Video from '../show/Video.vue'
-export default {}
+export default {
+  data() {
+    return {
+      video: '',
+      dialogVisible: false,
+      commentForm: {
+        articleId: '',
+        userId: '',
+        userName: '',
+        content: ''
+      },
+      commentList: []
+    }
+  },
+  created() {
+    this.getVideo(this.$route.query.id)
+    this.fuzhi()
+  },
+  methods: {
+    fuzhi() {
+      this.commentForm.userId = this.$cookies.get('user').id
+      this.commentForm.userName = this.$cookies.get('user').username
+    },
+    async getVideo(id) {
+      const { data: res } = await this.$http.get(`/video/getById?id=${id}`)
+      if (res.statue !== 200) {
+        return this.$message.error('获取视频失败')
+      }
+      this.video = res.data.video
+      this.commentForm.articleId = res.data.video.id
+    },
+    async getComment(id) {
+      const { data: res } = await this.$http.get(`/comment/findFiveCommentExamine?id=${id}`)
+      console.log(id)
+      if (res.statue !== 200) {
+        return this.$message.error('获取评论失败')
+      }
+      this.commentList = res.data.commentList
+      console.log(this.commentList)
+    },
+    async  likes(id) {
+      const { data: res } = await this.$http.get(`/video/likes?id=${id}`)
+      if (res.statue !== 200) {
+        return this.$notify.error('点赞失败')
+      }
+      this.getVideo(this.$route.query.id)
+      return this.$notify({
+        message: '点赞成功',
+        type: 'success'
+      })
+    },
+    showComment() {
+      this.dialogVisible = true
+    },
+    async commit() {
+      const { data: res } = await this.$http.post(`/comment/addComment`, this.commentForm)
+      if (res.statue !== 200) {
+        return this.$message.error('评论失败')
+      }
+      this.$refs.commentFormRef.resetFields()
+      this.dialogVisible = false
+      return this.$message.success('评论成功')
+    },
+    handleClose(done) {
+      this.dialogVisible = false
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>
