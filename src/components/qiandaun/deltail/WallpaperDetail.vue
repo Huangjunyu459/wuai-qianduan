@@ -143,6 +143,7 @@ export default {
       this.commentForm.articleId = res.data.wallpaper.id
     },
     async getComment(id) {
+      console.log(id)
       const { data: res } = await this.$http.get(`/comment/findFiveCommentExamine?id=${id}`)
       console.log(id)
       if (res.statue !== 200) {

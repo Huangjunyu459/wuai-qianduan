@@ -21,7 +21,7 @@
             <el-button
               slot="append"
               icon="el-icon-search"
-              @click="findCommentByIdExamine(queryInfo)"
+              @click="findCommentByContentExamine(queryInfo)"
             />
           </el-input>
         </el-col>
@@ -259,7 +259,7 @@ export default {
     }
   },
   created() {
-    this.pagingQueryExamine()
+    this.getCommentList()
   },
   methods: {
     async getCommentList() {
@@ -274,9 +274,8 @@ export default {
     },
     async pagingQueryExamine() {
       const { data: res } = await this.$http.get(
-        `/comment/pagingQueryExamine?id=${this.queryInfo.query}&index=${this.queryInfo.index}&size=${this.queryInfo.size}`
+        `/comment/pagingQueryExamine?content=${this.queryInfo.query}&index=${this.queryInfo.index}&size=${this.queryInfo.size}`
       )
-      console.log(res)
       if (res.statue !== 200) {
         return this.$message.error('获取评论列表失败')
       }
@@ -294,9 +293,9 @@ export default {
       this.pagingQueryExamine()
     },
     //  根据评论名称模糊查询
-    async findCommentByIdExamine(queryInfo) {
+    async findCommentByContentExamine(queryInfo) {
       const { data: res } = await this.$http.get(
-        `/comment/findCommentByIdExamine?id=${queryInfo.query}`
+        `/comment/findCommentByContentExamine?content=${queryInfo.query}`
       )
       console.log(res)
       if (res.statue !== 200) {

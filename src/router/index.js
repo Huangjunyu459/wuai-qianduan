@@ -180,6 +180,11 @@ const routes = [
     ]
   },
   {
+    path: '/',
+    component: Index,
+    redirect: '/main'
+  },
+  {
     path: '/index',
     component: Index,
     //  重定向到主页面

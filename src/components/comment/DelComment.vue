@@ -21,7 +21,7 @@
             <el-button
               slot="append"
               icon="el-icon-search"
-              @click="findCommentByIdIsDelete(queryInfo)"
+              @click="findCommentByContentIsDelete(queryInfo)"
             />
           </el-input>
         </el-col>
@@ -101,11 +101,10 @@ export default {
       this.pagingQueryIsDelete()
     },
     //  根据评论名称模糊查询
-    async findCommentByIdIsDelete(queryInfo) {
+    async findCommentByContentIsDelete(queryInfo) {
       const { data: res } = await this.$http.get(
-        `/comment/findCommentByIdIsDelete?id=${queryInfo.query}`
+        `/comment/findCommentByContentIsDelete?content=${queryInfo.query}`
       )
-      console.log(res)
       if (res.statue !== 200) {
         return this.$message.error('不存在该评论')
       }

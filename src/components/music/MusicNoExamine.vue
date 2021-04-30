@@ -91,7 +91,7 @@
                 type="danger"
                 icon="el-icon-delete"
                 size="mini"
-                @click="removeMusicById(row.id)"
+                @click="removeMusicById(row.id,row.authorId)"
               >不通过</el-button>
             </el-tooltip>
           </template>
@@ -270,7 +270,7 @@ export default {
     },
 
     //    根据 id 删除对应的音频
-    async removeMusicById(id) {
+    async removeMusicById(id, authorId) {
       //    弹框询问用户是否删除数据
       const confirmResult = await this.$confirm(
         '此操作将永久删除该音频, 是否继续?',
@@ -289,7 +289,7 @@ export default {
         return this.$message.info('已取消删除')
       }
       const { data: res } = await this.$http.delete(
-        '/music/removeMusicById?id=' + id
+        `/music/removeMusicById?id=${id}&authorId=${authorId}`
       )
       if (res.statue !== 200) {
         return this.$message.error('删除音频失败')

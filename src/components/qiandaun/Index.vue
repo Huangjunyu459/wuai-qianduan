@@ -8,7 +8,8 @@
           :underline="false"
           type="info"
           icon="el-icon-edit"
-        >地址发布页</el-link>
+          @click="$router.push(`/admin/login`)"
+        >管理员</el-link>
       </div>
       <!-- logo首页连接 -->
       <div class="logoPic">
@@ -139,10 +140,18 @@
               <el-form-item label="邮箱" prop="email">
                 <el-input v-model="registerForm.email" @blur="checkEmail(registerForm.email)" />
               </el-form-item>
+              <el-form-item label="注册码" prop="RCode">
+                <el-input v-model="registerForm.RCode" @blur="checkRCode(registerForm.email,registerForm.RCode)" />
+              </el-form-item>
               <el-form-item label="密码" prop="password">
                 <el-input v-model="registerForm.password" />
               </el-form-item>
             </el-form>
+            <el-button
+              style="border-radius: 25px"
+              type="primary"
+              @click="acceptRC(registerForm.email)"
+            ><i class="el-icon-message">发送注册码到邮箱</i></el-button>
             <el-button
               style="border-radius: 25px; margin-left: 150px; width: 150px"
               type="success"
@@ -162,8 +171,8 @@
               <el-form-item label="邮箱" prop="email">
                 <el-input v-model="findPSForm.email" />
               </el-form-item>
-              <el-form-item label="邮箱验证码">
-                <el-input v-model="findPSForm.checkCoed" />
+              <el-form-item label="邮箱验证码" prop="VCode">
+                <el-input v-model="findPSForm.VCode" @blur="checkVCode(findPSForm.email,findPSForm.VCode)" />
               </el-form-item>
               <el-form-item label="新密码" prop="newPassword">
                 <el-input v-model="findPSForm.newPassword" />
@@ -172,11 +181,13 @@
             <el-button
               style="border-radius: 25px"
               type="primary"
+              @click="acceptVC(findPSForm.email)"
             ><i class="el-icon-message">发送验证码到邮箱</i></el-button>
             <el-button
               style="border-radius: 25px; margin-left: 150px; width: 150px"
               type="success"
-            ><i class="el-icon-check">确认更新密码</i></el-button>
+              @click="findPS(findPSForm.email,findPSForm.newPassword)"
+            ><i class="el-icon-check">找回密码</i></el-button>
           </el-tab-pane>
         </el-tabs>
       </el-dialog>
@@ -258,7 +269,8 @@ export default {
       registerForm: {
         username: '',
         email: '',
-        password: ''
+        password: '',
+        RCode: ''
       },
       registerFormRules: {
         username: [
@@ -285,16 +297,20 @@ export default {
           { validator: checkEmail, trigger: 'blur' },
           {
             min: 6,
-            max: 16,
-            message: '长度在 6 到 16 个字符',
+            max: 128,
+            message: '长度在 6 到 128 个字符',
             trigger: 'blur'
           }
+        ],
+        RCode: [
+          { required: true, message: '注册码不能为空', trigger: 'blur' }
         ]
       },
       findPSForm: {
         email: '',
         checkCoed: '',
-        newPassword: ''
+        newPassword: '',
+        VCode: ''
       },
       findPSFormRules: {
         newPassword: [
@@ -312,10 +328,13 @@ export default {
           { validator: checkEmail, trigger: 'blur' },
           {
             min: 6,
-            max: 16,
-            message: '长度在 6 到 16 个字符',
+            max: 128,
+            message: '长度在 6 到 128 个字符',
             trigger: 'blur'
           }
+        ],
+        VCode: [
+          { required: true, message: '验证码不能为空', trigger: 'blur' }
         ]
       }
     }
@@ -415,6 +434,42 @@ export default {
     },
     recharge(id) {
       this.$router.push(`/recharge?id=${id}`)
+    },
+    async  acceptVC(email) {
+      const { data: res } = await this.$http.get(`/user/acceptVC?email=${email}`)
+      if (res.statue !== 200) {
+        return this.$message.error('发送邮件失败,请确认邮箱是否正确')
+      }
+      return this.$message.success('发送邮件成功')
+    },
+    async  acceptRC(email) {
+      const { data: res } = await this.$http.get(`/user/acceptRC?email=${email}`)
+      if (res.statue !== 200) {
+        return this.$message.error('发送邮件失败,请确认邮箱是否正确')
+      }
+      return this.$message.success('发送邮件成功')
+    },
+    async  checkRCode(email, RCode) {
+      const { data: res } = await this.$http.get(`/user/checkRCode?email=${email}&RCode=${RCode}`)
+      if (res.statue !== 200) {
+        return this.$message.error('注册码错误')
+      }
+      return this.$message.success('注册码正确')
+    },
+    async  checkVCode(email, VCode) {
+      const { data: res } = await this.$http.get(`/user/checkVCode?email=${email}&VCode=${VCode}`)
+      if (res.statue !== 200) {
+        return this.$message.error('验证码错误')
+      }
+      return this.$message.success('验证码正确')
+    },
+    async  findPS(email, newPassword) {
+      const { data: res } = await this.$http.get(`/user/findPS?email=${email}&newPassword=${newPassword}`)
+      if (res.statue !== 200) {
+        return this.$message.error('找回密码失败')
+      }
+      this.reload()
+      return this.$message.success('找回密码成功')
     }
   }
 }

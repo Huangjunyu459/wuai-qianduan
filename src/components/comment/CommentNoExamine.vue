@@ -21,7 +21,7 @@
             <el-button
               slot="append"
               icon="el-icon-search"
-              @click="findCommentByIdNoExamine(queryInfo)"
+              @click="findCommentByContentNoExamine(queryInfo)"
             />
           </el-input>
         </el-col>
@@ -160,9 +160,8 @@ export default {
     },
     async pagingQueryNoExamine() {
       const { data: res } = await this.$http.get(
-        `/comment/pagingQueryNoExamine?id=${this.queryInfo.query}&index=${this.queryInfo.index}&size=${this.queryInfo.size}`
+        `/comment/pagingQueryNoExamine?content=${this.queryInfo.query}&index=${this.queryInfo.index}&size=${this.queryInfo.size}`
       )
-      console.log(res)
       if (res.statue !== 200) {
         return this.$message.error('获取评论列表失败')
       }
@@ -180,11 +179,10 @@ export default {
       this.pagingQueryNoExamine()
     },
     //  根据评论名称模糊查询
-    async findCommentByIdNoExamine(queryInfo) {
+    async findCommentByContentNoExamine(queryInfo) {
       const { data: res } = await this.$http.get(
-        `/comment/findCommentByIdNoExamine?id=${queryInfo.query}`
+        `/comment/findCommentByContentNoExamine?content=${queryInfo.query}`
       )
-      console.log(res)
       if (res.statue !== 200) {
         return this.$message.error('不存在该评论')
       }

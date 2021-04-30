@@ -90,7 +90,7 @@
                 type="danger"
                 icon="el-icon-delete"
                 size="mini"
-                @click="removeWallpaperById(row.id)"
+                @click="removeWallpaperById(row.id,row.authorId)"
               >不通过</el-button>
             </el-tooltip>
           </template>
@@ -347,7 +347,7 @@ export default {
     },
 
     //    根据 id 删除对应的壁纸
-    async removeWallpaperById(id) {
+    async removeWallpaperById(id, authorId) {
       //    弹框询问用户是否删除数据
       const confirmResult = await this.$confirm(
         '此操作将永久删除该壁纸, 是否继续?',
@@ -366,7 +366,7 @@ export default {
         return this.$message.info('已取消删除')
       }
       const { data: res } = await this.$http.delete(
-        '/wallpaper/removeWallpaperById?id=' + id
+        `/wallpaper/removeWallpaperById?id=${id}&authorId=${authorId}`
       )
       if (res.statue !== 200) {
         return this.$message.error('删除壁纸失败')

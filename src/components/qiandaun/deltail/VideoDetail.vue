@@ -121,6 +121,7 @@ export default {
   },
   created() {
     this.getVideo(this.$route.query.id)
+    this.getComment(this.$route.query.id)
     this.fuzhi()
   },
   methods: {
