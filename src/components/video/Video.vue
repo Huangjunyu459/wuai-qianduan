@@ -122,8 +122,19 @@
         <el-form-item label="oss视频名" prop="ossName">
           <el-input v-model="addForm.ossName" />
         </el-form-item>
-        <el-form-item label="阿里云地址" prop="ossSrc">
-          <el-input v-model="addForm.ossSrc" />
+        <el-form-item label="视频文件">
+          <el-upload
+            ref="videoRef"
+            class="upload-demo"
+            drag
+            name="file"
+            action="http://127.0.0.1:8080/oss/uploadVideo"
+            :multiple="false"
+            :on-success="handleVideoSuccess"
+          >
+            <i class="el-icon-upload" />
+            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+          </el-upload>
         </el-form-item>
         <el-form-item label="作者id" prop="authorId">
           <el-input v-model="addForm.authorId" />
@@ -219,15 +230,6 @@ export default {
             trigger: 'blur'
           }
         ],
-        ossSrc: [
-          { required: true, message: '阿里云地址', trigger: 'blur' },
-          {
-            min: 10,
-            max: 300,
-            message: '长度在 10 到 300 个字符',
-            trigger: 'blur'
-          }
-        ],
         authorId: [
           { required: true, message: '请输入上传用户id', trigger: 'blur' },
           { validator: checckLove, trigger: 'blur' },
@@ -298,6 +300,9 @@ export default {
       this.videoList = res.data.videoIPage.records
       this.total = res.data.videoIPage.total
     },
+    handleVideoSuccess(responese) {
+      this.addForm.ossSrc = responese.data
+    },
     //  监听 pagesize 改变的事件
     handleSizeChange(newSize) {
       this.queryInfo.size = newSize
@@ -366,6 +371,7 @@ export default {
         if (res.statue !== 200) {
           return this.$message.error('修改视频失败')
         }
+        this.$refs.videoRef.clearFiles()
         this.$message.success('修改视频成功')
         //  隐藏修改视频的对话框
         this.editDialogVisivle = false

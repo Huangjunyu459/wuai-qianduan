@@ -136,6 +136,7 @@
 
 <script>
 export default {
+  inject: ['reload'],
   data() {
     //  游戏id验证规则
     var checckGame = (rule, value, cb) => {
@@ -281,7 +282,7 @@ export default {
         return this.$message.error('删除游戏失败')
       }
       this.$message.success('删除游戏成功')
-      // 分页功能有bug 先不使用 this.pagingQueryNoExamine()
+      // 分页功能有bug 先不使用 this.pagingQueryNoExamine(),使用this.reload()方法刷新代替
     }
   }
 }

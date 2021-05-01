@@ -122,8 +122,19 @@
         <el-form-item label="歌曲名" prop="song">
           <el-input v-model="addForm.song" />
         </el-form-item>
-        <el-form-item label="阿里云地址" prop="ossSrc">
-          <el-input v-model="addForm.ossSrc" />
+        <el-form-item label="歌曲文件">
+          <el-upload
+            ref="musicRef"
+            class="upload-demo"
+            drag
+            name="files"
+            action="http://127.0.0.1:8080/oss/uploadMusic"
+            :multiple="false"
+            :on-success="handleMusicSuccess"
+          >
+            <i class="el-icon-upload" />
+            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+          </el-upload>
         </el-form-item>
         <el-form-item label="作者id" prop="authorId">
           <el-input v-model="addForm.authorId" />
@@ -232,15 +243,6 @@ export default {
             trigger: 'blur'
           }
         ],
-        ossSrc: [
-          { required: true, message: '阿里云地址', trigger: 'blur' },
-          {
-            min: 10,
-            max: 200,
-            message: '长度在 10 到 200 个字符',
-            trigger: 'blur'
-          }
-        ],
         authorId: [
           { required: true, message: '请输入上传用户id', trigger: 'blur' },
           { validator: checckLove, trigger: 'blur' },
@@ -321,6 +323,9 @@ export default {
       this.musicList = res.data.musicIPage.records
       this.total = res.data.musicIPage.total
     },
+    handleMusicSuccess(responese) {
+      this.addForm.ossSrc = responese.data
+    },
     //  监听 pagesize 改变的事件
     handleSizeChange(newSize) {
       this.queryInfo.size = newSize
@@ -359,6 +364,7 @@ export default {
         if (res.statue !== 200) {
           return this.$message.error('添加音频失败')
         }
+        this.$refs.musicRef.clearFiles()
         this.$message.success('添加音频成功')
         //  隐藏添加音频的对话框
         this.addDialogVisible = false

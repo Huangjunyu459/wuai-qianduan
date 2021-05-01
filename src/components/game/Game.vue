@@ -120,6 +120,20 @@
         <el-form-item label="游戏名称" prop="gameName">
           <el-input v-model="addForm.gameName" />
         </el-form-item>
+        <el-form-item label="游戏封面">
+          <el-upload
+            ref="gameRef"
+            class="upload-demo"
+            drag
+            name="file"
+            action="http://127.0.0.1:8080/oss/uploadGameCover"
+            :multiple="false"
+            :on-success="handleGameSuccess"
+          >
+            <i class="el-icon-upload" />
+            <div class="el-upload__text">将图片拖到此处，或<em>点击上传</em></div>
+          </el-upload>
+        </el-form-item>
         <el-form-item label="游戏描述" prop="description">
           <el-input v-model="addForm.description" />
         </el-form-item>
@@ -191,6 +205,7 @@
 
 <script>
 export default {
+  inject: ['reload'],
   data() {
     //  点赞数id验证规则
     var checckLove = (rule, value, cb) => {
@@ -238,6 +253,7 @@ export default {
         bdSrc: '',
         bdCode: '',
         dCode: '',
+        gameCover: '',
         authorId: '',
         categoryId: '',
         love: 0,
@@ -444,6 +460,9 @@ export default {
       this.gameList = res.data.gameIPage.records
       this.total = res.data.gameIPage.total
     },
+    handleGameSuccess(responese) {
+      this.addForm.gameCover = responese.data
+    },
     //  监听 pagesize 改变的事件
     handleSizeChange(newSize) {
       this.queryInfo.size = newSize
@@ -482,6 +501,7 @@ export default {
         if (res.statue !== 200) {
           return this.$message.error('添加游戏失败')
         }
+        this.$refs.gameRef.clearFiles()
         this.$message.success('添加游戏成功')
         //  隐藏添加游戏的对话框
         this.addDialogVisible = false

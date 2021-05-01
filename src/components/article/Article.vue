@@ -132,8 +132,19 @@
         <el-form-item label="文章内容" prop="content">
           <el-input v-model="addForm.content" />
         </el-form-item>
-        <el-form-item label="阿里云地址" prop="articleCover">
-          <el-input v-model="addForm.articleCover" />
+        <el-form-item label="文章封面">
+          <el-upload
+            ref="articleRef"
+            class="upload-demo"
+            drag
+            name="file"
+            action="http://127.0.0.1:8080/oss/uploadArticle"
+            :multiple="false"
+            :on-success="handleArticleSuccess"
+          >
+            <i class="el-icon-upload" />
+            <div class="el-upload__text">将图片拖到此处，或<em>点击上传</em></div>
+          </el-upload>
         </el-form-item>
         <el-form-item label="作者id" prop="authorId">
           <el-input v-model="addForm.authorId" />
@@ -243,15 +254,6 @@ export default {
             trigger: 'blur'
           }
         ],
-        articleCover: [
-          { required: true, message: '请输入封面图片连接', trigger: 'blur' },
-          {
-            min: 10,
-            max: 200,
-            message: '长度在 10 到 200 个字符',
-            trigger: 'blur'
-          }
-        ],
         authorId: [
           { required: true, message: '请输入上传用户id', trigger: 'blur' },
           { validator: checckLove, trigger: 'blur' },
@@ -334,6 +336,9 @@ export default {
       this.articleList = res.data.articleIPage.records
       this.total = res.data.articleIPage.total
     },
+    handleArticleSuccess(responese) {
+      this.addForm.articleCover = responese.data
+    },
     //  监听 pagesize 改变的事件
     handleSizeChange(newSize) {
       this.queryInfo.size = newSize
@@ -372,6 +377,7 @@ export default {
         if (res.statue !== 200) {
           return this.$message.error('添加文章失败')
         }
+        this.$refs.articleRef.clearFiles()
         this.$message.success('添加文章成功')
         //  隐藏添加文章的对话框
         this.addDialogVisible = false
