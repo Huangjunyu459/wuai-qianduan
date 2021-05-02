@@ -124,7 +124,7 @@
             class="upload-demo"
             drag
             name="file"
-            action="http://127.0.0.1:8080/oss/uploadPic"
+            action="http://120.78.73.173:8080/oss/uploadPic"
             :multiple="false"
             :on-success="handleWallpaperSuccess"
           >
@@ -315,7 +315,7 @@ export default {
       this.wallpaperList = res.data.wallpaperList
       this.total = res.data.wallpaperList.length
     },
-    async pagingQueryExamine() {
+    async  pagingQueryExamine() {
       const { data: res } = await this.$http.get(
         `/wallpaper/pagingQueryExamine?title=${this.queryInfo.query}&index=${this.queryInfo.index}&size=${this.queryInfo.size}`
       )
@@ -327,7 +327,9 @@ export default {
       this.total = res.data.wallpaperIPage.total
     },
     handleWallpaperSuccess(responese) {
+      console.log('responese.data:' + responese.data)
       this.addForm.ossSrc = responese.data
+      console.log('addForm.ossSrc:' + this.addForm.ossSrc)
     },
     //  监听 pagesize 改变的事件
     handleSizeChange(newSize) {

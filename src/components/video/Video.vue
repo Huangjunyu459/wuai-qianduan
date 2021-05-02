@@ -128,7 +128,7 @@
             class="upload-demo"
             drag
             name="file"
-            action="http://127.0.0.1:8080/oss/uploadVideo"
+            action="http://120.78.73.173:8080/oss/uploadVideo"
             :multiple="false"
             :on-success="handleVideoSuccess"
           >

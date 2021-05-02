@@ -13,7 +13,7 @@
         <el-upload
           class="upload-demo"
           drag
-          action="http://127.0.0.1:8080/oss/uploadPic"
+          action="http://120.78.73.173:8080/oss/uploadPic"
           multiple
           on-success="hanldeSuccess"
         >

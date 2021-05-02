@@ -31,7 +31,7 @@
                 class="upload-demo"
                 drag
                 name="file"
-                action="http://127.0.0.1:8080/oss/uploadArticle"
+                action="http://120.78.73.173:8080/oss/uploadArticle"
                 :multiple="false"
                 :on-success="handleArticleSuccess"
               >
@@ -67,7 +67,7 @@
                 class="upload-demo"
                 drag
                 name="file"
-                action="http://127.0.0.1:8080/oss/uploadPic"
+                action="http://120.78.73.173:8080/oss/uploadPic"
                 :multiple="false"
                 :on-success="handleWallpaperSuccess"
               >
@@ -112,7 +112,7 @@
                 class="upload-demo"
                 drag
                 name="file"
-                action="http://127.0.0.1:8080/oss/uploadGameCover"
+                action="http://120.78.73.173:8080/oss/uploadGameCover"
                 :multiple="false"
                 :on-success="handleGameSuccess"
               >
@@ -160,7 +160,7 @@
                 class="upload-demo"
                 drag
                 name="file"
-                action="http://127.0.0.1:8080/oss/uploadMusicCover"
+                action="http://120.78.73.173:8080/oss/uploadMusicCover"
                 :multiple="false"
                 :on-success="handleMusicCoverSuccess"
               >
@@ -174,7 +174,7 @@
                 class="upload-demo"
                 drag
                 name="files"
-                action="http://127.0.0.1:8080/oss/uploadMusic"
+                action="http://120.78.73.173:8080/oss/uploadMusic"
                 :multiple="false"
                 :on-success="handleMusicSuccess"
               >
@@ -210,7 +210,7 @@
                 class="upload-demo"
                 drag
                 name="file"
-                action="http://127.0.0.1:8080/oss/uploadVideo"
+                action="http://120.78.73.173:8080/oss/uploadVideo"
                 :multiple="false"
                 :on-success="handleVideoSuccess"
               >
@@ -431,7 +431,9 @@ export default {
       return this.$message.success('上传成功')
     },
     handleWallpaperSuccess(responese) {
+      console.log('responese.data:' + responese.data)
       this.wallpaperForm.ossSrc = responese.data
+      console.log('wallpaperform.ossSrc:' + this.wallpaperForm.ossSrc)
     },
     async uploadWallpaper() {
       const { data: res } = await this.$http.post(`/wallpaper/addWallpaper`, this.wallpaperForm)

@@ -38,8 +38,8 @@
         @mouseout="NoShowUserInfo"
       >
         <img
-          src="https://2021article.oss-cn-hangzhou.aliyuncs.com/pic/ae2483538378479f84c66a6a89384e5c_%E9%BB%98%E8%AE%A4%E5%A4%B4%E5%83%8F.jpg"
-          alt=""
+          :src="avatar"
+          alt="用户头像"
         >
       </div>
 
@@ -262,6 +262,7 @@ export default {
       // 用户信息是否显示
       userInfo: false,
       user: '',
+      avatar: '',
       loginForm: {
         email: '',
         password: ''
@@ -350,6 +351,7 @@ export default {
       }
       this.$cookies.set('user', res.data.user)
       this.user = this.$cookies.get('user')
+      this.avatar = this.$cookies.get('user').avatar
     },
     showUserInfo() {
       this.userInfo = true

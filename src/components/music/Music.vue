@@ -128,7 +128,7 @@
             class="upload-demo"
             drag
             name="files"
-            action="http://127.0.0.1:8080/oss/uploadMusic"
+            action="http://120.78.73.173:8080/oss/uploadMusic"
             :multiple="false"
             :on-success="handleMusicSuccess"
           >

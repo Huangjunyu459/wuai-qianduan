@@ -126,7 +126,7 @@
             class="upload-demo"
             drag
             name="file"
-            action="http://127.0.0.1:8080/oss/uploadGameCover"
+            action="http://120.78.73.173:8080/oss/uploadGameCover"
             :multiple="false"
             :on-success="handleGameSuccess"
           >
