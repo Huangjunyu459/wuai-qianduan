@@ -34,6 +34,7 @@
           round
           icon="el-icon-download"
           type="success"
+          @click="download"
         >下载
         </el-button>
       </div>
@@ -104,11 +105,13 @@
         </div>
       </div>
     </div>
+    <a v-show="false" class="wallpapaerLink" :href="wallpaper.ossSrc">12345</a>
   </div>
 </template>
 
 <script>
 export default {
+  inject: ['reload'],
   data() {
     return {
       wallpaper: '',
@@ -143,16 +146,14 @@ export default {
       this.commentForm.articleId = res.data.wallpaper.id
     },
     async getComment(id) {
-      console.log(id)
       const { data: res } = await this.$http.get(`/comment/findFiveCommentExamine?id=${id}`)
-      console.log(id)
       if (res.statue !== 200) {
-        return this.$message.error('获取评论失败')
+        return
       }
       this.commentList = res.data.commentList
-      console.log(this.commentList)
     },
     async  likes(id) {
+      if (!this.$cookies.get('user')) return this.$notify.error('请先登录')
       const { data: res } = await this.$http.get(`/wallpaper/likes?id=${id}`)
       if (res.statue !== 200) {
         return this.$notify.error('点赞失败')
@@ -164,6 +165,7 @@ export default {
       })
     },
     showComment() {
+      if (!this.$cookies.get('user')) return this.$notify.error('请先登录')
       this.dialogVisible = true
     },
     async commit() {
@@ -177,6 +179,17 @@ export default {
     },
     handleClose(done) {
       this.dialogVisible = false
+    },
+    async download() {
+      if (!this.$cookies.get('user')) return this.$notify.error('请先登录')
+      const { data: res } = await this.$http.get(`/user/download?id=${this.$cookies.get('user').id}`)
+      if (res.statue !== 200) {
+        return this.$message.error('积分不足，下载失败')
+      }
+      document.getElementsByClassName('wallpapaerLink')[0].click()
+      const { data: respo } = await this.$http.get(`user/findUserById?id=${this.$cookies.get('user').id}`)
+      this.$cookies.set('user', respo.data.user)
+      this.reload()
     }
   }
 }

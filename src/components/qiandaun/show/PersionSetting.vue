@@ -15,7 +15,7 @@
           drag
           action="http://120.78.73.173:8080/oss/uploadPic"
           multiple
-          on-success="hanldeSuccess"
+          :on-success="hanldeSuccess"
         >
           <i class="el-icon-upload" />
           <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -145,9 +145,9 @@ export default {
   methods: {
     async getUser(id) {
       const { data: res } = await this.$http.get(`/user/findUserById?id=${id}`)
+      this.$cookies.set('user', res.data.user)
       this.editForm = res.data.user
       this.editForm.avatar = this.$cookies.get('user').avatar
-      console.log(this.$cookies.get('user').avatar)
     },
     hanldeSuccess(responese) {
       this.editForm.avatar = responese.data
@@ -158,6 +158,7 @@ export default {
         return this.$message.error('更新失败')
       }
       this.reload()
+      this.getUser(this.$cookies.get('user').id)
       return this.$message.success('更新成功')
     },
     async checkUser(username) {

@@ -27,7 +27,7 @@
         <el-menu-item index="/game"> 游戏 </el-menu-item>
         <el-menu-item index="/music"> 音频 </el-menu-item>
         <el-menu-item index="/video"> 视频 </el-menu-item>
-        <el-menu-item index="/vip"> 会员专区 </el-menu-item>
+        <el-menu-item @click="vip"> 会员专区 </el-menu-item>
       </el-menu>
       <!-- 用户已登录区域 -->
       <div
@@ -431,6 +431,7 @@ export default {
     checkLogin() {
       if (this.$cookies.get('user') !== null) {
         this.user = this.$cookies.get('user')
+        this.avatar = this.$cookies.get('user').avatar
         this.islogin = true
       }
     },
@@ -472,6 +473,13 @@ export default {
       }
       this.reload()
       return this.$message.success('找回密码成功')
+    },
+    vip() {
+      if (this.$cookies.get('user').state === 2) {
+        return this.$router.push(`/vip`)
+      } else {
+        this.$router.push(`/tips`)
+      }
     }
   }
 }

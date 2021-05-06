@@ -29,6 +29,8 @@ import DelVideo from '../components/video/DelVideo.vue'
 import Comment from '../components/comment/Comment.vue'
 import CommentNoExamine from '../components/comment/CommentNoExamine.vue'
 import DelComment from '../components/comment/DelComment.vue'
+import ActiveCode from '../components/activeCode/ActiveCode.vue'
+import DelActiveCode from '../components/activeCode/ActiveCodeDel.vue'
 
 // 前端首页路由
 import Index from '../components/qiandaun/Index.vue'
@@ -63,6 +65,7 @@ import FindMuiscs from '../components/qiandaun/finds/FindMusics.vue'
 import FindVideos from '../components/qiandaun/finds/FindVideos.vue'
 import Vip from '../components/qiandaun/show/Vip.vue'
 import Recharge from '../components/qiandaun/show/recharge.vue'
+import Tips from '../components/qiandaun/show/Tips.vue'
 
 Vue.use(VueRouter)
 
@@ -176,6 +179,14 @@ const routes = [
       {
         path: '/comment/findIsDelete',
         component: DelComment
+      },
+      {
+        path: '/activeCode/findActiveCode',
+        component: ActiveCode
+      },
+      {
+        path: '/activeCode/findIsDelete',
+        component: DelActiveCode
       }
     ]
   },
@@ -197,6 +208,10 @@ const routes = [
       {
         path: '/vip',
         component: Vip
+      },
+      {
+        path: '/tips',
+        component: Tips
       },
       {
         path: '/wallpaper',

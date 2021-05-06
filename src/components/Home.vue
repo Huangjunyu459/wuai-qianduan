@@ -307,6 +307,32 @@
               </template>
             </el-menu-item>
           </el-submenu>
+          <el-submenu index="10">
+            <!-- 一级菜单模板区域 -->
+            <template slot="title">
+              <!-- 图表 -->
+              <i class="iconfont icon-shipin" />
+              <!-- 文本 -->
+              <span>激活码管理</span>
+            </template>
+            <!-- 二级菜单 -->
+            <el-menu-item index="/activeCode/findActiveCode">
+              <template slot="title">
+                <!-- 图表 -->
+                <i class="el-icon-menu" />
+                <!-- 文本 -->
+                <span>未使用激活码</span>
+              </template>
+            </el-menu-item>
+            <el-menu-item index="/activeCode/findIsDelete">
+              <template slot="title">
+                <!-- 图表 -->
+                <i class="el-icon-menu" />
+                <!-- 文本 -->
+                <span>已使用激活码</span>
+              </template>
+            </el-menu-item>
+          </el-submenu>
         </el-menu>
       </el-aside>
       <!-- 右侧内容主体区域 -->
