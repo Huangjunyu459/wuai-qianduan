@@ -116,7 +116,7 @@
 
     <!-- 修改评论对话框 -->
     <el-dialog
-      title="修改评论"
+      title="修改激活码"
       :visible.sync="editDialogVisivle"
       width="50%"
       @close="editDialogClosed"
