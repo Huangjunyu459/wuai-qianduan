@@ -108,6 +108,7 @@
       </el-form>
       <!-- 底部区域 -->
       <span slot="footer" class="dialog-footer">
+        <el-button @click="GenActiveCode">生成激活码</el-button>
         <el-button @click="addDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="addActCode">确 定</el-button>
       </span>
@@ -348,14 +349,21 @@ export default {
         return this.$message.info('已取消删除')
       }
       const { data: res } = await this.$http.delete(
-        '/actCode/removeById?id=' + id
+        `/actCode/removeById?id=${id}`
       )
       if (res.statue !== 200) {
-        return this.$message.error('删除评论失败')
+        return this.$message.error('删除失败')
       }
-      this.$message.success('删除评论成功')
-      //   重新获取评论数据
+      this.$message.success('删除成功')
+      //   重新获取数据
       this.pagingQueryExamine()
+    },
+    async GenActiveCode() {
+      const { data: res } = await this.$http.get(`/actCode/GenActiveCode`)
+      if (res.statue !== 200) {
+        return this.$message.error('激活码生成失败，建议重试或者手动生成')
+      }
+      this.addForm.actCode = res.data.genActiveCode
     }
   }
 }
