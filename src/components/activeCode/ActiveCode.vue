@@ -186,16 +186,6 @@ export default {
             message: '长度为16个字符',
             trigger: 'blur'
           }
-        ],
-        userId: [
-          { required: true, message: '请输入用户id', trigger: 'blur' },
-          { validator: checckNum, trigger: 'blur' },
-          {
-            min: 1,
-            max: 19,
-            message: '长度在 1 到 19 个字符',
-            trigger: 'blur'
-          }
         ]
       },
       //    控制修改对话框的显示与隐藏
@@ -238,7 +228,7 @@ export default {
         '/actCode/findAllActiveCode'
       )
       if (res.statue !== 200) {
-        return this.$message.error('获取评论列表失败')
+        return this.$message.error('获取激活码失败')
       }
       this.activeCodeList = res.data.activeCodeList
       this.total = res.data.activeCodeList.length
@@ -248,7 +238,7 @@ export default {
         `/actCode/pagingQuery?code=${this.queryInfo.query}&index=${this.queryInfo.index}&size=${this.queryInfo.size}`
       )
       if (res.statue !== 200) {
-        return this.$message.error('获取评论列表失败')
+        return this.$message.error('获取激活码失败')
       }
       this.activeCodeList = res.data.activeCodeIPage.records
       this.total = res.data.activeCodeIPage.total
@@ -270,7 +260,7 @@ export default {
       )
       console.log(res)
       if (res.statue !== 200) {
-        return this.$message.error('不存在该评论')
+        return this.$message.error('不存在该激活码')
       }
       this.activeCodeList = res.data.activeCodeList
       this.total = res.data.activeCodeList.length

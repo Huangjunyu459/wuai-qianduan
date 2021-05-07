@@ -103,7 +103,6 @@
         </div>
       </div>
     </div>
-    <a v-show="false" class="articleLink" :href="article.articleCover">12345</a>
   </div>
 </template>
 
@@ -178,17 +177,6 @@ export default {
     },
     handleClose(done) {
       this.dialogVisible = false
-    },
-    async download() {
-      if (!this.$cookies.get('user')) return this.$notify.error('请先登录')
-      const { data: res } = await this.$http.get(`/user/download?id=${this.$cookies.get('user').id}`)
-      if (res.statue !== 200) {
-        return this.$message.error('积分不足，下载失败')
-      }
-      document.getElementsByClassName('articleLink')[0].click()
-      const { data: respo } = await this.$http.get(`user/findUserById?id=${this.$cookies.get('user').id}`)
-      this.$cookies.set('user', respo.data.user)
-      this.reload()
     }
   }
 

@@ -71,7 +71,15 @@ export default {
       wallpaperList: [],
       title: '',
       total: 0,
-      cpage: 1
+      cpage: 1,
+      //  获取游戏列表的参数对象
+      queryInfo: {
+        query: '',
+        //  当前的页数
+        index: 1,
+        //  当前每页显示多少条数据
+        size: 5
+      }
     }
   },
   created() {
@@ -94,6 +102,27 @@ export default {
     },
     findWallpaperByTitleExamine(title) {
       this.$router.push(`/findWallpaperByTitleExamine?title=${title}`)
+    },
+    async  pagingQueryExamine() {
+      const { data: res } = await this.$http.get(
+        `/wallpaper/pagingQueryExamine?title=${this.queryInfo.query}&index=${this.queryInfo.index}&size=${this.queryInfo.size}`
+      )
+      console.log(res)
+      if (res.statue !== 200) {
+        return this.$message.error('获取壁纸列表失败')
+      }
+      this.wallpaperList = res.data.wallpaperIPage.records
+      this.total = res.data.wallpaperIPage.total
+    },
+    //  监听 pagesize 改变的事件
+    handleSizeChange(newSize) {
+      this.queryInfo.size = newSize
+      this.pagingQueryExamine()
+    },
+    //  监听 页码值 改变的事件
+    handleCurrentChange(newPage) {
+      this.queryInfo.index = newPage
+      this.pagingQueryExamine()
     }
   }
 }

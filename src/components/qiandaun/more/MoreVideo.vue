@@ -68,7 +68,14 @@ export default {
       videoList: [],
       videoName: '',
       total: 0,
-      cpage: 1
+      cpage: 1,
+      queryInfo: {
+        query: '',
+        //  当前的页数
+        index: 1,
+        //  当前每页显示多少条数据
+        size: 5
+      }
     }
   },
   created() {
@@ -81,12 +88,34 @@ export default {
         return this.$message.error('获取视频列表失败')
       }
       this.videoList = res.data.videoList
+      this.total = res.data.videoList.length
     },
     detailVideo(id) {
       this.$router.push(`/showDetailVideo?id=${id}`)
     },
     findVideoByVideoNameExamine(videoName) {
       this.$router.push(`/findVideoByVideoNameExamine?videoName=${videoName}`)
+    },
+    async pagingQueryExamine() {
+      const { data: res } = await this.$http.get(
+        `/video/pagingQueryExamine?videoName=${this.queryInfo.query}&index=${this.queryInfo.index}&size=${this.queryInfo.size}`
+      )
+      console.log(res)
+      if (res.statue !== 200) {
+        return this.$message.error('获取视频列表失败')
+      }
+      this.videoList = res.data.videoIPage.records
+      this.total = res.data.videoIPage.total
+    },
+    //  监听 pagesize 改变的事件
+    handleSizeChange(newSize) {
+      this.queryInfo.size = newSize
+      this.pagingQueryExamine()
+    },
+    //  监听 页码值 改变的事件
+    handleCurrentChange(newPage) {
+      this.queryInfo.index = newPage
+      this.pagingQueryExamine()
     }
   }
 

@@ -77,7 +77,7 @@ export default {
         '/actCode/findIsDelete'
       )
       if (res.statue !== 200) {
-        return this.$message.error('获取评论列表失败')
+        return this.$message.error('获取激活码失败')
       }
       this.activeCodeList = res.data.activeCodeList
       this.total = res.data.activeCodeList.length
@@ -87,7 +87,7 @@ export default {
         `/actCode/pagingQueryIsDelete?code=${this.queryInfo.query}&index=${this.queryInfo.index}&size=${this.queryInfo.size}`
       )
       if (res.statue !== 200) {
-        return this.$message.error('获取评论列表失败')
+        return this.$message.error('获取激活码失败')
       }
       this.activeCodeList = res.data.activeCodeIPage.records
       this.total = res.data.activeCodeIPage.total
@@ -109,7 +109,7 @@ export default {
       )
       console.log(res)
       if (res.statue !== 200) {
-        return this.$message.error('不存在该评论')
+        return this.$message.error('不存在该激活码')
       }
       this.activeCodeList = res.data.activeCodeList
       this.total = res.data.activeCodeList.length

@@ -73,13 +73,24 @@ export default {
     return {
       wallpaperList: [],
       total: 0,
-      cpage: 1
+      cpage: 1,
+      queryInfo: {
+        query: '',
+        //  当前的页数
+        index: 1,
+        //  当前每页显示多少条数据
+        size: 5
+      }
     }
   },
   created() {
     this.getwallpaperList(this.$route.query.title)
+    this.fuzhi()
   },
   methods: {
+    fuzhi() {
+      this.queryInfo.query = this.$route.query.title
+    },
     async  getwallpaperList(title) {
       const { data: res } = await this.$http.get(`/wallpaper/findWallpaperByTitleExamine?title=${title}`)
       if (res.statue !== 200) {
@@ -90,6 +101,27 @@ export default {
     },
     detailWallpaper(id) {
       this.$router.push(`/showDetailWallpaper?id=${id}`)
+    },
+    async  pagingQueryExamine() {
+      const { data: res } = await this.$http.get(
+        `/wallpaper/pagingQueryExamine?title=${this.queryInfo.query}&index=${this.queryInfo.index}&size=${this.queryInfo.size}`
+      )
+      console.log(res)
+      if (res.statue !== 200) {
+        return this.$message.error('获取壁纸列表失败')
+      }
+      this.wallpaperList = res.data.wallpaperIPage.records
+      this.total = res.data.wallpaperIPage.total
+    },
+    //  监听 pagesize 改变的事件
+    handleSizeChange(newSize) {
+      this.queryInfo.size = newSize
+      this.pagingQueryExamine()
+    },
+    //  监听 页码值 改变的事件
+    handleCurrentChange(newPage) {
+      this.queryInfo.index = newPage
+      this.pagingQueryExamine()
     }
   }
 

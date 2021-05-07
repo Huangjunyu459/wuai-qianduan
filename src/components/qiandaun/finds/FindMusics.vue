@@ -57,13 +57,24 @@ export default {
     return {
       musicList: [],
       total: 0,
-      cpage: 1
+      cpage: 1,
+      queryInfo: {
+        query: '',
+        //  当前的页数
+        index: 1,
+        //  当前每页显示多少条数据
+        size: 5
+      }
     }
   },
   created() {
     this.getMusicList(this.$route.query.song)
+    this.fuzhi()
   },
   methods: {
+    fuzhi() {
+      this.queryInfo.query = this.$route.query.song
+    },
     async  getMusicList(song) {
       const { data: res } = await this.$http.get(`/music/findMusicBySongExamine?song=${song}`)
       if (res.statue !== 200) {
@@ -74,6 +85,27 @@ export default {
     },
     detailMusic(id) {
       this.$router.push(`/showDetailMusic?id=${id}`)
+    },
+    async pagingQueryExamine() {
+      const { data: res } = await this.$http.get(
+        `/music/pagingQueryExamine?song=${this.queryInfo.query}&index=${this.queryInfo.index}&size=${this.queryInfo.size}`
+      )
+      console.log(res)
+      if (res.statue !== 200) {
+        return this.$message.error('获取音频列表失败')
+      }
+      this.musicList = res.data.musicIPage.records
+      this.total = res.data.musicIPage.total
+    },
+    //  监听 pagesize 改变的事件
+    handleSizeChange(newSize) {
+      this.queryInfo.size = newSize
+      this.pagingQueryExamine()
+    },
+    //  监听 页码值 改变的事件
+    handleCurrentChange(newPage) {
+      this.queryInfo.index = newPage
+      this.pagingQueryExamine()
     }
   }
 

@@ -60,13 +60,24 @@ export default {
     return {
       articleList: [],
       total: 0,
-      cpage: 1
+      cpage: 1,
+      queryInfo: {
+        query: '',
+        //  当前的页数
+        index: 1,
+        //  当前每页显示多少条数据
+        size: 5
+      }
     }
   },
   created() {
     this.getArticleList(this.$route.query.title)
+    this.fuzhi()
   },
   methods: {
+    fuzhi() {
+      this.queryInfo.query = this.$route.query.title
+    },
     async  getArticleList(title) {
       const { data: res } = await this.$http.get(`/article/findArticleByTitleExamine?title=${title}`)
       console.log(res)
@@ -78,6 +89,27 @@ export default {
     },
     detailArticle(id) {
       this.$router.push(`/showDetailArticle?id=${id}`)
+    },
+    //  监听 pagesize 改变的事件
+    handleSizeChange(newSize) {
+      this.queryInfo.size = newSize
+      this.pagingQueryExamine()
+    },
+    //  监听 页码值 改变的事件
+    handleCurrentChange(newPage) {
+      this.queryInfo.index = newPage
+      this.pagingQueryExamine()
+    },
+    async pagingQueryExamine() {
+      const { data: res } = await this.$http.get(
+        `/article/pagingQueryExamine?title=${this.queryInfo.query}&index=${this.queryInfo.index}&size=${this.queryInfo.size}`
+      )
+      console.log(res)
+      if (res.statue !== 200) {
+        return this.$message.error('获取文章列表失败')
+      }
+      this.articleList = res.data.articleIPage.records
+      this.total = res.data.articleIPage.total
     }
   }
 

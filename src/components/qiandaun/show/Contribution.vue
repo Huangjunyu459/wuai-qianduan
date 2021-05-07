@@ -19,9 +19,10 @@
             <el-form-item label="文章内容" prop="content">
               <el-input
                 v-model="articleForm.content"
+                placeholder="请使用 / 来进行分段"
                 type="textarea"
                 :autosize="{ minRows: 4, maxRows: 6}"
-                maxlength="300"
+                maxlength="2000"
                 show-word-limit
               />
             </el-form-item>
@@ -275,8 +276,8 @@ export default {
           { required: true, message: '请输入文章内容', trigger: 'blur' },
           {
             min: 20,
-            max: 300,
-            message: '长度在 20 到 300 个字符',
+            max: 2000,
+            message: '长度在 20 到 2000 个字符',
             trigger: 'blur'
           }
         ]

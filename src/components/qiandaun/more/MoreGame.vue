@@ -67,7 +67,15 @@ export default {
       gameList: [],
       gameName: '',
       total: 0,
-      cpage: 1
+      cpage: 1,
+      //  获取游戏列表的参数对象
+      queryInfo: {
+        query: '',
+        //  当前的页数
+        index: 1,
+        //  当前每页显示多少条数据
+        size: 5
+      }
     }
   },
   created() {
@@ -90,6 +98,26 @@ export default {
 
     findGameByGameNameExamine(gameName) {
       this.$router.push(`/findGameByGameNameExamine?gameName=${gameName}`)
+    },
+    //  监听 pagesize 改变的事件
+    handleSizeChange(newSize) {
+      this.queryInfo.size = newSize
+      this.pagingQueryExamine()
+    },
+    //  监听 页码值 改变的事件
+    handleCurrentChange(newPage) {
+      this.queryInfo.index = newPage
+      this.pagingQueryExamine()
+    },
+    async pagingQueryExamine() {
+      const { data: res } = await this.$http.get(
+        `/game/pagingQueryExamine?gameName=${this.queryInfo.query}&index=${this.queryInfo.index}&size=${this.queryInfo.size}`
+      )
+      if (res.statue !== 200) {
+        return this.$message.error('获取游戏列表失败')
+      }
+      this.gameList = res.data.gameIPage.records
+      this.total = res.data.gameIPage.total
     }
   }
 }

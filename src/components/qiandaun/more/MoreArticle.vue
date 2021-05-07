@@ -67,7 +67,15 @@ export default {
       articleList: [],
       title: '',
       total: 0,
-      cpage: 1
+      cpage: 1,
+      //  获取文章列表的参数对象
+      queryInfo: {
+        query: '',
+        //  当前的页数
+        index: 1,
+        //  当前每页显示多少条数据
+        size: 5
+      }
     }
   },
   created() {
@@ -87,6 +95,27 @@ export default {
     },
     findArticleByTitleExamine(title) {
       this.$router.push(`/findArticleByTitleExamine?title=${title}`)
+    },
+    //  监听 pagesize 改变的事件
+    handleSizeChange(newSize) {
+      this.queryInfo.size = newSize
+      this.pagingQueryExamine()
+    },
+    //  监听 页码值 改变的事件
+    handleCurrentChange(newPage) {
+      this.queryInfo.index = newPage
+      this.pagingQueryExamine()
+    },
+    async pagingQueryExamine() {
+      const { data: res } = await this.$http.get(
+        `/article/pagingQueryExamine?title=${this.queryInfo.query}&index=${this.queryInfo.index}&size=${this.queryInfo.size}`
+      )
+      console.log(res)
+      if (res.statue !== 200) {
+        return this.$message.error('获取文章列表失败')
+      }
+      this.articleList = res.data.articleIPage.records
+      this.total = res.data.articleIPage.total
     }
   }
 
