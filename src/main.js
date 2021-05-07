@@ -12,8 +12,8 @@ import './assets/css/global.css'
 //  导入 axios
 import axios from 'axios'
 //  配置请求的根路径
-axios.defaults.baseURL = 'http://120.78.73.173:8080'
-// axios.defaults.baseURL = 'http://localhost:8080'
+// axios.defaults.baseURL = 'http://120.78.73.173:8080'
+axios.defaults.baseURL = 'http://localhost:8080'
 //  预处理api请求，必须带token
 // axios.interceptors.request.use(config => {
 //   config.headers.Authorization = window.sessionStorage.getItem('token')

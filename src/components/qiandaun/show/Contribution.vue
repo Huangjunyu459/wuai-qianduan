@@ -32,7 +32,7 @@
                 class="upload-demo"
                 drag
                 name="file"
-                action="http://120.78.73.173:8080/oss/uploadArticle"
+                action="http://localhost:8080/oss/uploadArticle"
                 :multiple="false"
                 :on-success="handleArticleSuccess"
               >
@@ -68,7 +68,7 @@
                 class="upload-demo"
                 drag
                 name="file"
-                action="http://120.78.73.173:8080/oss/uploadPic"
+                action="http://localhost:8080/oss/uploadPic"
                 :multiple="false"
                 :on-success="handleWallpaperSuccess"
               >
@@ -113,7 +113,7 @@
                 class="upload-demo"
                 drag
                 name="file"
-                action="http://120.78.73.173:8080/oss/uploadGameCover"
+                action="http://localhost:8080/oss/uploadGameCover"
                 :multiple="false"
                 :on-success="handleGameSuccess"
               >
@@ -161,7 +161,7 @@
                 class="upload-demo"
                 drag
                 name="file"
-                action="http://120.78.73.173:8080/oss/uploadMusicCover"
+                action="http://localhost:8080/oss/uploadMusicCover"
                 :multiple="false"
                 :on-success="handleMusicCoverSuccess"
               >
@@ -175,7 +175,7 @@
                 class="upload-demo"
                 drag
                 name="files"
-                action="http://120.78.73.173:8080/oss/uploadMusic"
+                action="http://localhost:8080/oss/uploadMusic"
                 :multiple="false"
                 :on-success="handleMusicSuccess"
               >
@@ -211,7 +211,7 @@
                 class="upload-demo"
                 drag
                 name="file"
-                action="http://120.78.73.173:8080/oss/uploadVideo"
+                action="http://localhost:8080/oss/uploadVideo"
                 :multiple="false"
                 :on-success="handleVideoSuccess"
               >
@@ -460,7 +460,9 @@ export default {
       return this.$message.success('上传成功')
     },
     handleMusicSuccess(responese) {
+      console.log(responese.data)
       this.musicForm.ossSrc = responese.data
+      console.log(this.musicForm.ossSrc)
     },
     handleMusicCoverSuccess(responese) {
       this.musicForm.musicCover = responese.data
