@@ -3,8 +3,8 @@
     <!-- 头像用户区域 -->
     <div class="avator">
       <img
-        src="https://2021article.oss-cn-hangzhou.aliyuncs.com/pic/ae2483538378479f84c66a6a89384e5c_%E9%BB%98%E8%AE%A4%E5%A4%B4%E5%83%8F.jpg"
-        alt=""
+        :src="user.avatar"
+        alt="用户头像"
       >
     </div>
     <span>{{ user.username }}</span>

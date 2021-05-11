@@ -65,6 +65,8 @@ export default {
         return this.$message.error('激活失败')
       }
       this.$refs.rechargeFormRef.resetFields()
+      const { data: rep } = await this.$http.get(`/user/findUserById?id=${this.$cookies.get('user').id}`)
+      this.$cookies.set('user', rep.data.user)
       this.reload()
       return this.$message.success('激活会员成功')
     }
